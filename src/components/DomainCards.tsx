@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { Globe, Cpu, ExternalLink } from 'lucide-react';
 
 // Shared Google Drive URL for all domains
-const driveUrl = "https://drive.google.com/drive/folders/16F5oqyDoZRLsrxeUfqEZJ7_QI_hx7liy?usp=sharing";
+const driveUrl = "https://drive.google.com/drive/folders/11mw6_wFKDnQFbNC-HMExjmktOUaj-VQ7?usp=sharing";
 
 const domains = [
   {

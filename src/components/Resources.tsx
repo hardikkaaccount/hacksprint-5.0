@@ -3,14 +3,19 @@ import { FileText, Book, Presentation, Download } from 'lucide-react';
 
 const resources = [
   {
+    title: "Problem Statements",
+    description: "Problem statements for software and hardware domains for Hacksprint 5.0",
+    link: "https://drive.google.com/drive/folders/11mw6_wFKDnQFbNC-HMExjmktOUaj-VQ7?usp=sharing"
+  },
+  {
     title: "PPT Templates",
     description: "PPT templates for the Idea submission for the hackathon",
-    link: "https://drive.google.com/drive/folders/16F5oqyDoZRLsrxeUfqEZJ7_QI_hx7liy?usp=drive_link"
+    link: "https://drive.google.com/drive/folders/1NHNXRBMk1gtzMSTHOYmDaUomQzZQfLop?usp=sharing"
   },
   {
     title: "Brochure and rulebook",
     description: "Poster, Event Flow, Brochure and rulebook for the hackathon",
-    link: "https://drive.google.com/drive/folders/16F5oqyDoZRLsrxeUfqEZJ7_QI_hx7liy?usp=drive_link"
+    link: "https://drive.google.com/drive/folders/1GEmkZKMEtx66M16Aa2BOdFlRSfaoSlTF?usp=sharing"
   }
 ];
 
@@ -38,30 +43,30 @@ const Resources = () => {
           Resources
         </h2>
 
-        <div className="flex justify-center items-center gap-8 flex-wrap max-w-6xl mx-auto">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto">
           {resources.map((resource, index) => (
             <div
               key={index}
-              className="relative group transform transition-all duration-300 hover:scale-105 w-full md:w-[calc(50%-1rem)] max-w-xl"
+              className="relative group transform transition-all duration-300 hover:scale-105"
             >
               {/* Enhanced glow effect */}
               <div className="absolute -inset-0.5 bg-gradient-to-r from-[#B66EFF] to-[#00E5FF] rounded-2xl opacity-75 group-hover:opacity-100 blur transition duration-1000 group-hover:duration-200 animate-tilt"></div>
               
               {/* Card content */}
-              <div className="relative flex flex-col items-center justify-center p-8 bg-[#0D1117] rounded-2xl backdrop-blur-sm min-h-[280px]">
-                <h3 className="text-2xl font-semibold text-white mb-4 text-center">
+              <div className="relative flex flex-col items-center justify-center p-6 bg-[#0D1117] rounded-2xl backdrop-blur-sm h-full">
+                <h3 className="text-xl font-semibold text-white mb-3 text-center">
                   {resource.title}
                 </h3>
-                <p className="text-white/80 text-center mb-6">
+                <p className="text-white/80 text-center mb-5 text-sm">
                   {resource.description}
                 </p>
                 <a
                   href={resource.link}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex items-center space-x-2 px-6 py-3 bg-gradient-to-r from-[#B66EFF] to-[#00E5FF] rounded-full text-white font-semibold hover:opacity-90 transition-opacity"
+                  className="flex items-center space-x-2 px-5 py-2 bg-gradient-to-r from-[#B66EFF] to-[#00E5FF] rounded-full text-white font-semibold hover:opacity-90 transition-opacity text-sm"
                 >
-                  <Download className="w-5 h-5" />
+                  <Download className="w-4 h-4" />
                   <span>Download</span>
                 </a>
               </div>

@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
@@ -13,7 +13,7 @@ import {
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { useToast } from '@/components/ui/use-toast';
-import { Upload, Rocket, X, CheckCircle2, AlertCircle } from 'lucide-react';
+import { Upload, Rocket, X, CheckCircle2, AlertCircle, Download } from 'lucide-react';
 import { submitRegistrationToGoogleSheets, RegistrationData } from '@/utils/googleSheets';
 import RegistrationFormStatus from './RegistrationFormStatus';
 import { DialogTitle } from '@/components/ui/dialog';
@@ -45,6 +45,88 @@ const formSchema = z.object({
 
 type FormValues = z.infer<typeof formSchema>;
 
+// Create a standalone success popup component
+const SuccessPopup = ({ 
+  teamName, 
+  whatsappLink, 
+  onClose, 
+  hasJoinedGroup, 
+  setHasJoinedGroup 
+}: { 
+  teamName: string; 
+  whatsappLink: string; 
+  onClose: () => void; 
+  hasJoinedGroup: boolean; 
+  setHasJoinedGroup: (joined: boolean) => void; 
+}) => {
+  // Handle WhatsApp group join
+  const handleJoinGroup = () => {
+    if (whatsappLink) {
+      window.open(whatsappLink, '_blank');
+      setHasJoinedGroup(true);
+    }
+  };
+
+  return (
+    <div className="fixed inset-0 flex items-center justify-center z-[100] bg-black/80 backdrop-blur-md">
+      <div className="bg-gradient-to-b from-[#0D1117] to-[#161b22] p-6 md:p-8 rounded-xl border border-purple-500/30 w-full max-w-md mx-auto shadow-lg shadow-purple-500/20 relative">
+        <Button 
+          onClick={onClose} 
+          variant="ghost" 
+          size="icon" 
+          className="absolute right-2 top-2 text-gray-400 hover:text-white"
+        >
+          <X className="h-4 w-4" />
+        </Button>
+        
+        <div className="mb-6 text-center">
+          <div className="w-16 h-16 bg-gradient-to-r from-purple-600 to-blue-500 rounded-full flex items-center justify-center mx-auto mb-4">
+            <CheckCircle2 className="h-8 w-8 text-white" />
+          </div>
+          <h3 className="text-2xl font-bold text-center mb-2 text-white">
+            Registration Successful!
+          </h3>
+          <p className="text-lg font-medium text-center text-white">
+            Congratulations {teamName}!
+          </p>
+          <p className="text-white/80 text-center mt-4">
+            Welcome to Hacksprint 5.0! Get ready for an exciting journey of innovation and creativity.
+          </p>
+        </div>
+        
+        <div className="bg-white/5 rounded-lg p-4 mb-6">
+          <p className="text-white/90 text-center font-medium">
+            Join our WhatsApp group for important updates and to connect with other participants
+          </p>
+        </div>
+        
+        <div className="flex flex-col space-y-3">
+          <Button
+            onClick={handleJoinGroup}
+            className="w-full bg-green-500 hover:bg-green-600 text-white font-semibold py-3 text-lg"
+          >
+            <Rocket className="mr-2 h-5 w-5" />
+            Join WhatsApp Group
+          </Button>
+          
+          <Button
+            onClick={onClose}
+            className="w-full bg-gray-700 hover:bg-gray-600 text-white"
+          >
+            Close
+          </Button>
+          
+          {!hasJoinedGroup && (
+            <p className="text-amber-400 text-sm text-center mt-3 font-medium">
+              * Joining the WhatsApp group is required to complete registration
+            </p>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+};
+
 const RegistrationForm = ({ onClose }: { onClose?: () => void }) => {
   const { toast } = useToast();
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -53,6 +135,19 @@ const RegistrationForm = ({ onClose }: { onClose?: () => void }) => {
   const [statusMessage, setStatusMessage] = useState<string>('');
   const [whatsappLink, setWhatsappLink] = useState<string>('');
   const [hasJoinedGroup, setHasJoinedGroup] = useState<boolean>(false);
+  const [registeredTeamName, setRegisteredTeamName] = useState<string>('');
+  const [showRegistrationForm, setShowRegistrationForm] = useState<boolean>(true);
+  
+  // Global state for the popup
+  const [showSuccessPopup, setShowSuccessPopup] = useState<boolean>(false);
+  
+  // Explicitly manage popup state
+  useEffect(() => {
+    if (formStatus === 'success') {
+      setShowRegistrationForm(false);
+      setShowSuccessPopup(true);
+    }
+  }, [formStatus]);
   
   // Initialize form with react-hook-form
   const form = useForm<FormValues>({
@@ -143,8 +238,9 @@ const RegistrationForm = ({ onClose }: { onClose?: () => void }) => {
       const result = await submitRegistrationToGoogleSheets(registrationData);
       
       if (result.success) {
+        setRegisteredTeamName(values.teamName);
         setFormStatus('success');
-        setStatusMessage(result.message);
+        setStatusMessage(`🎉 Congratulations ${values.teamName}! Your registration is successful! 🎉`);
         setWhatsappLink(result.whatsappLink || '');
         setHasJoinedGroup(false);
         form.reset();
@@ -178,337 +274,324 @@ const RegistrationForm = ({ onClose }: { onClose?: () => void }) => {
     }
   };
 
-  // Handle WhatsApp group join
-  const handleJoinGroup = () => {
-    if (whatsappLink) {
-      window.open(whatsappLink, '_blank');
-      setHasJoinedGroup(true);
-      if (onClose) {
-        setTimeout(() => {
-          onClose();
-        }, 2000);
-      }
-    }
+  // Close success popup
+  const handleCloseSuccessPopup = () => {
+    setShowSuccessPopup(false);
+    if (onClose) onClose();
   };
 
   return (
-    <div className="relative bg-black/60 backdrop-blur-md rounded-xl p-6 border border-white/10 max-h-[90vh] overflow-y-auto">
-      <DialogTitle className="sr-only">Registration Form</DialogTitle>
-      
-      {onClose && (
-        <Button 
-          onClick={onClose} 
-          variant="ghost" 
-          size="icon" 
-          className="absolute right-2 top-2 z-10 text-gray-400 hover:text-white"
-        >
-          <X className="h-4 w-4" />
-        </Button>
-      )}
-      
-      <h2 className="text-4xl font-bold text-center mb-8 bg-clip-text text-transparent bg-gradient-to-r from-white to-gray-400">
-        Register Your Team
-      </h2>
-      
-      <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-          {/* Team Name */}
-          <FormField
-            control={form.control}
-            name="teamName"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Team Name</FormLabel>
-                <FormControl>
-                  <Input placeholder="Enter your team name" {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+    <>
+      {/* Registration Form */}
+      {showRegistrationForm && (
+        <div className="relative bg-black/60 backdrop-blur-md rounded-xl p-4 md:p-6 border border-white/10 max-h-[90vh] overflow-y-auto w-full">
+          <DialogTitle className="sr-only">Registration Form</DialogTitle>
           
-          {/* Lead Name */}
-          <FormField
-            control={form.control}
-            name="leadName"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Team Lead's Email</FormLabel>
-                <FormControl>
-                  <Input placeholder="Enter team lead's email id" type="email" {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+          {onClose && (
+            <Button 
+              onClick={onClose} 
+              variant="ghost" 
+              size="icon" 
+              className="absolute right-2 top-2 z-10 text-gray-400 hover:text-white"
+            >
+              <X className="h-4 w-4" />
+            </Button>
+          )}
           
-          {/* Lead Phone */}
-          <FormField
-            control={form.control}
-            name="leadPhone"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Phone Number</FormLabel>
-                <FormControl>
-                  <Input 
-                    placeholder="Enter contact number" 
-                    type="tel" 
-                    {...field} 
+          <h2 className="text-2xl md:text-4xl font-bold text-center mb-6 bg-clip-text text-transparent bg-gradient-to-r from-white to-gray-400">
+            Register Your Team
+          </h2>
+          
+          <Form {...form}>
+            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 md:space-y-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {/* Team Name */}
+                <FormField
+                  control={form.control}
+                  name="teamName"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Team Name</FormLabel>
+                      <FormControl>
+                        <Input placeholder="Enter your team name" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                
+                {/* Lead Name */}
+                <FormField
+                  control={form.control}
+                  name="leadName"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Team Lead's Email</FormLabel>
+                      <FormControl>
+                        <Input placeholder="Enter team lead's email id" type="email" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+              
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {/* Lead Phone */}
+                <FormField
+                  control={form.control}
+                  name="leadPhone"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Phone Number</FormLabel>
+                      <FormControl>
+                        <Input 
+                          placeholder="Enter contact number" 
+                          type="tel" 
+                          {...field} 
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                
+                {/* College Name */}
+                <FormField
+                  control={form.control}
+                  name="collegeName"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>College Name</FormLabel>
+                      <FormControl>
+                        <Input placeholder="Enter your college name" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+              
+              {/* Hackathon Domain */}
+              <FormField
+                control={form.control}
+                name="hackathonDomain"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Project Domain</FormLabel>
+                    <Select onValueChange={field.onChange} defaultValue={field.value}>
+                      <FormControl>
+                        <SelectTrigger>
+                          <SelectValue placeholder="Select project domain" />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        <SelectItem value="Software Development">Software Development</SelectItem>
+                        <SelectItem value="Hardware Development">Hardware Development</SelectItem>
+                      </SelectContent>
+                    </Select>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              
+              {/* Team Members */}
+              <div className="space-y-3">
+                <h3 className="font-medium">Team Members</h3>
+                
+                {/* Member 1 */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <FormField
+                    control={form.control}
+                    name="member1Name"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Member 1 Name</FormLabel>
+                        <FormControl>
+                          <Input placeholder="Enter member name" {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
                   />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          
-          {/* College Name */}
-          <FormField
-            control={form.control}
-            name="collegeName"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>College Name</FormLabel>
-                <FormControl>
-                  <Input placeholder="Enter your college name" {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          
-          {/* Hackathon Domain */}
-          <FormField
-            control={form.control}
-            name="hackathonDomain"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Project Domain</FormLabel>
-                <Select onValueChange={field.onChange} defaultValue={field.value}>
-                  <FormControl>
-                    <SelectTrigger>
-                      <SelectValue placeholder="Select project domain" />
-                    </SelectTrigger>
-                  </FormControl>
-                  <SelectContent>
-                    <SelectItem value="Software Development">Software Development</SelectItem>
-                    <SelectItem value="Hardware Development">Hardware Development</SelectItem>
-                  </SelectContent>
-                </Select>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          
-          {/* Team Members */}
-          <div className="space-y-4">
-            <h3 className="font-medium">Team Members</h3>
-            
-            {/* Member 1 */}
-            <div className="grid grid-cols-2 gap-4">
-              <FormField
-                control={form.control}
-                name="member1Name"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Member 1 Name</FormLabel>
-                    <FormControl>
-                      <Input placeholder="Enter member name" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="member1USN"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Member 1 USN</FormLabel>
-                    <FormControl>
-                      <Input placeholder="Enter USN" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            </div>
-            
-            {/* Member 2 */}
-            <div className="grid grid-cols-2 gap-4">
-              <FormField
-                control={form.control}
-                name="member2Name"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Member 2 Name</FormLabel>
-                    <FormControl>
-                      <Input placeholder="Enter member name" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="member2USN"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Member 2 USN</FormLabel>
-                    <FormControl>
-                      <Input placeholder="Enter USN" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            </div>
-            
-            {/* Member 3 */}
-            <div className="grid grid-cols-2 gap-4">
-              <FormField
-                control={form.control}
-                name="member3Name"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Member 3 Name (Optional)</FormLabel>
-                    <FormControl>
-                      <Input placeholder="Enter member name" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="member3USN"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Member 3 USN (Optional)</FormLabel>
-                    <FormControl>
-                      <Input placeholder="Enter USN" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            </div>
-            
-            {/* Member 4 */}
-            <div className="grid grid-cols-2 gap-4">
-              <FormField
-                control={form.control}
-                name="member4Name"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Member 4 Name (Optional)</FormLabel>
-                    <FormControl>
-                      <Input placeholder="Enter member name" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="member4USN"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Member 4 USN (Optional)</FormLabel>
-                    <FormControl>
-                      <Input placeholder="Enter USN" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            </div>
-          </div>
-          
-          {/* PPT Upload Field */}
-          <div className="space-y-2">
-            <FormLabel htmlFor="pptFile">📎 PPT Upload Field</FormLabel>
-            <div className="flex items-center gap-4">
+                  <FormField
+                    control={form.control}
+                    name="member1USN"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Member 1 USN</FormLabel>
+                        <FormControl>
+                          <Input placeholder="Enter USN" {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
+                
+                {/* Member 2 */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <FormField
+                    control={form.control}
+                    name="member2Name"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Member 2 Name</FormLabel>
+                        <FormControl>
+                          <Input placeholder="Enter member name" {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="member2USN"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Member 2 USN</FormLabel>
+                        <FormControl>
+                          <Input placeholder="Enter USN" {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
+                
+                {/* Member 3 */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <FormField
+                    control={form.control}
+                    name="member3Name"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Member 3 Name (Optional)</FormLabel>
+                        <FormControl>
+                          <Input placeholder="Enter member name" {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="member3USN"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Member 3 USN (Optional)</FormLabel>
+                        <FormControl>
+                          <Input placeholder="Enter USN" {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
+                
+                {/* Member 4 */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <FormField
+                    control={form.control}
+                    name="member4Name"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Member 4 Name (Optional)</FormLabel>
+                        <FormControl>
+                          <Input placeholder="Enter member name" {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="member4USN"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Member 4 USN (Optional)</FormLabel>
+                        <FormControl>
+                          <Input placeholder="Enter USN" {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
+              </div>
+              
+              {/* PPT Upload Field */}
+              <div className="space-y-2">
+                <div className="flex items-center justify-between">
+                  <FormLabel htmlFor="pptFile">📎 PPT Upload Field</FormLabel>
+                  <a 
+                    href="https://drive.google.com/drive/folders/1NHNXRBMk1gtzMSTHOYmDaUomQzZQfLop?usp=sharing" 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className="text-xs text-blue-400 hover:text-blue-300 underline flex items-center"
+                  >
+                    <Download className="mr-1 h-3 w-3" />
+                    Download template
+                  </a>
+                </div>
+                <div className="flex items-center gap-4">
+                  <Button 
+                    type="button"
+                    variant="outline"
+                    className="border-dashed border-2 border-white/20 hover:border-white/30"
+                    onClick={() => fileInputRef.current?.click()}
+                  >
+                    <Upload className="mr-2 h-4 w-4" />
+                    Choose File
+                  </Button>
+                  
+                  <input
+                    ref={fileInputRef}
+                    id="pptFile"
+                    type="file"
+                    accept=".pdf,.doc,.docx,.ppt,.pptx,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document,application/vnd.ms-powerpoint,application/vnd.openxmlformats-officedocument.presentationml.presentation"
+                    onChange={handleFileChange}
+                    className="hidden"
+                  />
+                  
+                  <span className="text-sm text-muted-foreground truncate max-w-[200px] md:max-w-xs">
+                    {selectedFile ? selectedFile.name : "No file chosen"}
+                  </span>
+                </div>
+              </div>
+              
+              {/* Form Status */}
+              <RegistrationFormStatus status={formStatus} message={statusMessage} />
+              
+              {/* Submit Button */}
               <Button 
-                type="button"
-                variant="outline"
-                className="border-dashed border-2 border-white/20 hover:border-white/30"
-                onClick={() => fileInputRef.current?.click()}
+                type="submit" 
+                className="w-full bg-gradient-to-r from-primary to-secondary hover:from-primary/90 hover:to-secondary/90 transition-all duration-300 transform hover:scale-[1.02] mt-4"
+                disabled={formStatus === 'submitting'}
               >
-                <Upload className="mr-2 h-4 w-4" />
-                Choose File
-              </Button>
-              
-              <input
-                ref={fileInputRef}
-                id="pptFile"
-                type="file"
-                accept=".pdf,.doc,.docx,.ppt,.pptx,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document,application/vnd.ms-powerpoint,application/vnd.openxmlformats-officedocument.presentationml.presentation"
-                onChange={handleFileChange}
-                className="hidden"
-              />
-              
-              <span className="text-sm text-muted-foreground">
-                {selectedFile ? selectedFile.name : "No file chosen"}
-              </span>
-            </div>
-          </div>
-          
-          {/* Form Status */}
-          <RegistrationFormStatus status={formStatus} message={statusMessage} />
-          
-          {/* Submit Button */}
-          <Button 
-            type="submit" 
-            className="w-full bg-gradient-to-r from-primary to-secondary hover:from-primary/90 hover:to-secondary/90 transition-all duration-300 transform hover:scale-[1.02] mt-6"
-            disabled={formStatus === 'submitting'}
-          >
-            {formStatus === 'submitting' ? (
-              <Rocket className="mr-2 h-4 w-4 animate-bounce" />
-            ) : (
-              <Rocket className="mr-2 h-4 w-4" />
-            )}
-            Submit Registration
-          </Button>
-        </form>
-      </Form>
-      
-      {formStatus === 'success' && (
-        <div className="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center z-50">
-          <div className="bg-[#0D1117] p-8 rounded-xl border border-white/10 max-w-md w-full mx-4">
-            <h3 className="text-2xl font-bold text-center mb-4 text-white">
-              Join Our WhatsApp Group
-            </h3>
-            <p className="text-white/80 text-center mb-6">
-              To complete your registration, please join our WhatsApp group for important updates and communication.
-            </p>
-            <div className="flex flex-col gap-4">
-              <Button
-                onClick={handleJoinGroup}
-                className="w-full bg-green-500 hover:bg-green-600 text-white"
-                disabled={hasJoinedGroup}
-              >
-                {hasJoinedGroup ? (
-                  <>
-                    <CheckCircle2 className="mr-2 h-4 w-4" />
-                    Joined Group
-                  </>
+                {formStatus === 'submitting' ? (
+                  <Rocket className="mr-2 h-4 w-4 animate-bounce" />
                 ) : (
-                  <>
-                    <Rocket className="mr-2 h-4 w-4" />
-                    Join WhatsApp Group
-                  </>
+                  <Rocket className="mr-2 h-4 w-4" />
                 )}
+                Submit Registration
               </Button>
-              {!hasJoinedGroup && (
-                <p className="text-red-400 text-sm text-center">
-                  * Joining the WhatsApp group is mandatory to complete registration
-                </p>
-              )}
-            </div>
-          </div>
+            </form>
+          </Form>
         </div>
       )}
-    </div>
+      
+      {/* Render the success popup as a completely separate component */}
+      {showSuccessPopup && (
+        <SuccessPopup 
+          teamName={registeredTeamName}
+          whatsappLink={whatsappLink}
+          onClose={handleCloseSuccessPopup}
+          hasJoinedGroup={hasJoinedGroup}
+          setHasJoinedGroup={setHasJoinedGroup}
+        />
+      )}
+    </>
   );
 };
 
