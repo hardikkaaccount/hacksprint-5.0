@@ -1,0 +1,214 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  /* Dark theme by default for the hackathon */
+  :root {
+    --background: 240 10% 3.9%;
+    --foreground: 0 0% 98%;
+    
+    --card: 240 10% 3.9%;
+    --card-foreground: 0 0% 98%;
+    
+    --popover: 240 10% 3.9%;
+    --popover-foreground: 0 0% 98%;
+    
+    --primary: 263 75% 63%;
+    --primary-foreground: 0 0% 98%;
+    
+    --secondary: 217 76% 51%;
+    --secondary-foreground: 0 0% 98%;
+    
+    --accent: 333 71% 51%;
+    --accent-foreground: 0 0% 98%;
+    
+    --muted: 240 3.7% 15.9%;
+    --muted-foreground: 240 5% 64.9%;
+    
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 0 0% 98%;
+    
+    --border: 240 3.7% 15.9%;
+    --input: 240 3.7% 15.9%;
+    --ring: 263 75% 63%;
+    
+    --sidebar-background: 240 5.9% 10%;
+    --sidebar-foreground: 240 4.8% 95.9%;
+    --sidebar-primary: 224.3 76.3% 48%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 240 3.7% 15.9%;
+    --sidebar-accent-foreground: 240 4.8% 95.9%;
+    --sidebar-border: 240 3.7% 15.9%;
+    --sidebar-ring: 217.2 91.2% 59.8%;
+    
+    --prize: 45 93% 55%; /* Gold color for prizes */
+    --success: 142 70% 45%; /* Green color for success */
+    --info: 217 91% 60%; /* Blue color for info */
+    --warning: 35 92% 55%; /* Orange color for warnings */
+    
+    --radius: 0.75rem;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-[hsl(var(--border))];
+  }
+
+  body {
+    @apply bg-background text-foreground;
+  }
+}
+
+/* Custom animations for components */
+.animate-float {
+  animation: float 3s ease-in-out infinite;
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-5px); }
+}
+
+/* Bounce animation for buttons */
+.animate-bounce {
+  animation: bounce 2s ease infinite;
+}
+
+@keyframes bounce {
+  0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+  40% { transform: translateY(-12px); }
+  60% { transform: translateY(-5px); }
+}
+
+/* Pulse animation for highlights */
+.animate-pulse-custom {
+  animation: pulse-custom 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+@keyframes pulse-custom {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+/* Spin animation for loading indicators */
+.animate-spin-slow {
+  animation: spin 8s linear infinite;
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+/* Transition styles for animations */
+.domain-card-transition {
+  opacity: 0;
+  transform: translateY(50px);
+  transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+}
+
+.timeline-event-transition {
+  opacity: 0;
+  transform: translateX(50px);
+  transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+}
+
+.logo-transition {
+  opacity: 0;
+  transform: scale(0.9);
+  transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+}
+
+.prize-transition {
+  opacity: 0;
+  transform: translateY(50px);
+  transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+}
+
+/* Neon glow effect for important elements */
+.neon-glow {
+  filter: drop-shadow(0 0 8px rgba(138, 75, 255, 0.5));
+}
+
+.neon-glow-prize {
+  filter: drop-shadow(0 0 8px rgba(255, 215, 0, 0.5));
+}
+
+/* Hover card animations */
+.hover-card-effect {
+  transition: all 0.3s ease;
+}
+
+.hover-card-effect:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 10px 25px -5px rgba(138, 75, 255, 0.3);
+}
+
+@keyframes tilt {
+  0%, 100% { transform: rotate(0deg); }
+  25% { transform: rotate(1deg); }
+  75% { transform: rotate(-1deg); }
+}
+
+.animate-tilt {
+  animation: tilt 10s infinite linear;
+}
+
+.glowing-title {
+  animation: glowPulse 3s ease-in-out infinite;
+}
+
+@keyframes glowPulse {
+  0% {
+    text-shadow: 
+      0 0 7px rgba(255, 255, 255, 0.8),
+      0 0 10px rgba(182, 110, 255, 0.8),
+      0 0 21px rgba(182, 110, 255, 0.7),
+      0 0 42px rgba(182, 110, 255, 0.6),
+      0 0 82px rgba(0, 229, 255, 0.5),
+      0 0 92px rgba(0, 229, 255, 0.4),
+      0 0 102px rgba(0, 229, 255, 0.3),
+      0 0 151px rgba(0, 229, 255, 0.2);
+  }
+  50% {
+    text-shadow: none;
+  }
+  100% {
+    text-shadow: 
+      0 0 7px rgba(255, 255, 255, 0.8),
+      0 0 10px rgba(182, 110, 255, 0.8),
+      0 0 21px rgba(182, 110, 255, 0.7),
+      0 0 42px rgba(182, 110, 255, 0.6),
+      0 0 82px rgba(0, 229, 255, 0.5),
+      0 0 92px rgba(0, 229, 255, 0.4),
+      0 0 102px rgba(0, 229, 255, 0.3),
+      0 0 151px rgba(0, 229, 255, 0.2);
+  }
+}
+
+.neon-text {
+  position: relative;
+  color: #fff;
+  text-shadow: 
+    0 0 5px rgba(182, 110, 255, 1),
+    0 0 15px rgba(138, 143, 255, 0.8),
+    0 0 25px rgba(0, 229, 255, 0.6);
+  animation: neonBreathe 3s infinite;
+}
+
+@keyframes neonBreathe {
+  0%, 100% {
+    text-shadow: 
+      0 0 5px rgba(182, 110, 255, 1),
+      0 0 15px rgba(138, 143, 255, 0.8),
+      0 0 25px rgba(0, 229, 255, 0.6);
+  }
+  50% {
+    text-shadow: 
+      0 0 2px rgba(182, 110, 255, 0.5),
+      0 0 7px rgba(138, 143, 255, 0.4),
+      0 0 12px rgba(0, 229, 255, 0.3);
+  }
+}

@@ -1,0 +1,10 @@
+1. Timestamp
+2. Team Name
+3. Team Lead
+4. Phone Number
+5. College Name
+6. Member 1 (Name + USN)
+7. Member 2 (Name + USN)
+8. Member 3 (Name + USN) - Optional
+9. Member 4 (Name + USN) - Optional
+10. PPT URL 
