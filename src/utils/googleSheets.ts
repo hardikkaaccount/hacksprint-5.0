@@ -2,11 +2,11 @@
  * Utility functions for interacting with Google Sheets via Apps Script
  */
 
-// Google Apps Script deployment ID and form configuration
-const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwNxL5w2HgFHyv7GukPYTfn32O-WnN8Znz8GGSq_qrcGc5xo42ii-AT0zMz42C7cnRw/exec";
-const SHEET_ID = "19XpjKjtpcuzY7cHRvfn54BoCTU5CyMgiQ7IAyewlHac";
-const DRIVE_FOLDER_ID = "12hOP_HtiWFeISUUIdb2iJeW33QiDDd-r";
-const WHATSAPP_GROUP_LINK = "https://chat.whatsapp.com/G2sPoROCfMECIIdCMWqfwB";
+// Google Apps Script deployment ID and form configuration from environment variables
+const SCRIPT_URL = import.meta.env.VITE_SCRIPT_URL || "";
+const SHEET_ID = import.meta.env.VITE_SHEET_ID || "";
+const DRIVE_FOLDER_ID = import.meta.env.VITE_DRIVE_FOLDER_ID || "";
+const WHATSAPP_GROUP_LINK = import.meta.env.VITE_WHATSAPP_GROUP_LINK || "";
 
 export interface RegistrationData {
   teamName: string;
