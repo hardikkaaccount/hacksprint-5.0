@@ -67,7 +67,7 @@ const Footer = () => {
           <div className="border-t border-white/10">
             <div className="flex flex-col md:flex-row items-center justify-between text-gray-400 py-8">
               <p>© 2025 HackSprint 5.0 | <a href="https://pesce.ac.in" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">PES College of Engineering, Mandya</a></p>
-              <p className="text-sm mt-2 md:mt-0">Crafted with 💜 by <a href="https://www.linkedin.com/in/srinidhi0512/" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">Srinidhi</a> [Web Team, <a href="https://www.linkedin.com/company/tachyon-community-club/" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">Tachyon Community</a>]</p>
+              <p className="text-sm mt-2 md:mt-0">Crafted with 💜 by <a href="https://www.linkedin.com/in/srinidhi0512/" target="_blank" rel="noopener noreferrer" className="text-blue-400 text-bold hover:text-white transition-colors">Srinidhi</a> [Web Team, <a href="https://www.linkedin.com/company/tachyon-community-club/" target="_blank" rel="noopener noreferrer" className="text-blue-400 text-bold hover:text-white transition-colors">Tachyon Community</a>]</p>
             </div>
           </div>
         </div>
