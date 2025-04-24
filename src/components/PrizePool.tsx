@@ -85,13 +85,13 @@ const PrizePool = () => {
                   <span className="text-3xl md:text-5xl font-bold bg-gradient-to-r from-yellow-200 via-yellow-400 to-yellow-200 text-transparent bg-clip-text">₹60,000</span>
                 </div>
                 
-                <div className={`flex items-center gap-3 transition-all duration-700 delay-500 transform ${animated ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
-                  <Briefcase className="h-8 w-8 text-cyan-400" />
+                <div className={`flex items-center gap-0 transition-all duration-700 delay-500 transform ${animated ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
+                  <Briefcase className="h-8 w-8 text-cyan-400 flex-shrink-0" />
                   <span className="text-xl md:text-2xl font-bold text-cyan-400">Internship Opportunities</span>
                 </div>
                 
-                <div className={`flex items-center gap-3 transition-all duration-700 delay-700 transform ${animated ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-8'}`}>
-                  <Rocket className="h-8 w-8 text-pink-400" />
+                <div className={`flex items-center gap-0 transition-all duration-700 delay-700 transform ${animated ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-8'}`}>
+                  <Rocket className="h-8 w-8 text-pink-400 flex-shrink-0" />
                   <span className="text-xl md:text-2xl font-bold text-pink-400">Startup Incubation</span>
                 </div>
               </div>

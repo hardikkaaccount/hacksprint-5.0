@@ -3,36 +3,37 @@ import { Phone } from 'lucide-react';
 
 const contributingClubs = [
   {
-    name: 'Tachyon',
-    logo: '/Tachyon_White_nobg.png',
-  },
-  {
-    name: 'IIC',
-    logo: '/iic.png',
+    name: 'IEEE',
+    logo: '/ieee.png',
   },
   {
     name: 'ISTE',
     logo: '/iste.png',
   },
+  
   {
-    name: 'IEEE',
-    logo: '/ieee.png',
-  },
-  {
-    name: 'matrixz',
+    name: 'Matrixz',
     logo: '/matrixz.png',
   },
   {
-    name: 'FOSS CLUB',
-    logo: '/foss.png',
+    name: 'Tachyon',
+    logo: '/Tachyon_White_nobg.png',
   },
   {
     name: 'DOT',
     logo: '/dot.jpg',
   },
   {
+    name: 'FOSS CLUB',
+    logo: '/foss.png',
+  },
+  {
     name: 'Ascend',
     logo: '/Ascend.jpg',
+  },
+  {
+    name: 'Ennovate',
+    logo: '/Ennovate.png',
   },
 ];
 
@@ -42,11 +43,14 @@ const contributors = [
   { name: "Nilesh", phone: "+91 7022216197" },
   { name: "Lakshmi", phone: "+91 7892227374" },
   { name: "Prarthana S", phone: "+91 9632070570" },
-  { name: "Meera Devi Raval", phone: "+91 8197883645" }
+  { name: "Meera Devi Raval", phone: "+91 8197883645" },
+  { name: "Kunal M K", phone: "+91 7795687774" },
+  { name: "Shivam Kumar", phone: "+91 7549603525" },
+  { name: "Shubham Jha", phone: "+91 919599031330" },
 ];
 
 const facultyCoordinators = [
-  { name: "Dr. Umesh DR", phone: "+91 9886160070" },
+  { name: "Dr. ML Anitha", phone: "+91 9945576186" },
   { name: "Dr. Revanesh M", phone: "+91 9482999222" }
 ];
 
@@ -56,7 +60,7 @@ const Sponsors = () => {
       {/* Sponsors Section */}
       <div className="max-w-7xl mx-auto px-4 mb-20">
         <h2 className="neon-text text-5xl md:text-6xl font-bold text-center mb-16 tracking-normal">
-          Our Sponsors
+          Our Knowledge Partners
         </h2>
 
         <div className="flex justify-center">
@@ -74,10 +78,10 @@ const Sponsors = () => {
                 />
               </div>
               <h3 className="mt-4 text-3xl font-semibold text-transparent bg-clip-text bg-gradient-to-r from-[#B66EFF] to-[#00E5FF] group-hover:text-white transition-colors duration-300">
-                ICT Academy of Karnataka (ICTAK)
+                ICT Academy
               </h3>
               <p className="mt-4 text-lg text-white/80 text-center max-w-2xl leading-relaxed">
-                A public-private partnership organization, working in the ICT ecosystem. ICTAK is focusing on improving the quality of students coming out of institutions to make them industry-ready and immediately deployable.
+                ICT Academy bridges the gap between industry and academia, offering skill development programs to enhance students' employability and innovation in technology and business.
               </p>
             </div>
           </div>

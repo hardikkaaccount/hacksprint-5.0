@@ -6,7 +6,7 @@ const socialLinks = [
   {
     name: "Instagram",
     icon: Instagram,
-    url: "https://www.instagram.com/tachyon.club.pesce?utm_source=qr&igsh=Mng0aTFjcjYwdWZr",
+    url: "https://www.instagram.com/hacksprint5.0?utm_source=qr&igsh=ODY2YTNoeGV3anY1",
     color: "bg-gradient-to-r from-purple-500 via-pink-500 to-red-500",
     hoverEffect: "hover:shadow-pink-500/50"
   },

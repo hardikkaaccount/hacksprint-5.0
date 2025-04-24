@@ -19,7 +19,7 @@ const Footer = () => {
           <div className="flex justify-center items-center gap-4 mb-16">
             {/* Instagram */}
             <a
-              href="https://www.instagram.com/tachyon.club.pesce?utm_source=qr&igsh=Mng0aTFjcjYwdWZr"
+              href="https://www.instagram.com/hacksprint5.0?utm_source=qr&igsh=ODY2YTNoeGV3anY1"
               target="_blank"
               rel="noopener noreferrer"
               className="group"

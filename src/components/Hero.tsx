@@ -30,15 +30,26 @@ const Hero = ({ onRegisterClick }: HeroProps) => {
 
         <div className="flex flex-col items-center space-y-8">
           {/* College logo and name */}
-          <div className="flex flex-col md:flex-row items-center md:space-x-4 space-y-4 md:space-y-0">
-            <img 
-              src="/pesce-logo.png" 
-              alt="PESCE Logo" 
-              className="w-20 h-20 rounded-lg"
-            />
-            <h2 className="text-xl md:text-3xl font-bold bg-gradient-to-r from-[#8A8FFF] to-[#00E5FF] text-transparent bg-clip-text text-center md:text-left">
+          <div className="flex flex-col md:flex-row items-center justify-center w-full md:space-x-4 space-y-4 md:space-y-0">
+            <div className="flex items-center justify-end md:w-1/4 md:pr-4">
+              <img 
+                src="/pesce-logo.png" 
+                alt="PESCE Logo" 
+                className="w-20 h-20 rounded-lg"
+              />
+            </div>
+            
+            <h2 className="text-xl md:text-3xl font-bold bg-gradient-to-r from-[#8A8FFF] to-[#00E5FF] text-transparent bg-clip-text text-center md:w-1/2 px-4">
               PES COLLEGE OF ENGINEERING, MANDYA
             </h2>
+            
+            <div className="flex items-center justify-start md:w-1/4 md:pl-4">
+              <img 
+                src="/iic.png" 
+                alt="IIC Logo" 
+                className="w-20 h-20 rounded-lg"
+              />
+            </div>
           </div>
 
           {/* Venue and date */}
@@ -51,7 +62,7 @@ const Hero = ({ onRegisterClick }: HeroProps) => {
                 rel="noopener noreferrer" 
                 className="text-lg hover:underline hover:decoration-transparent hover:bg-clip-text hover:text-transparent hover:bg-gradient-to-r hover:from-[#B66EFF] hover:to-[#00E5FF]"
               >
-                HD Chowdiya Hall, K V Shankaragowda Rd,<br />PES College Campus, Mandya, Karnataka 571401
+                Dr. H. D. Chowdaiah Auditorium, K. V. Shankaragowda Rd,<br />PES College Campus, Mandya, Karnataka 571401
               </a>
             </div>
             <div className="flex items-center space-x-2 text-white/80">

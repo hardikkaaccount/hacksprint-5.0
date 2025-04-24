@@ -8,14 +8,14 @@ const domains = [
   {
     title: 'Software Development',
     icon: Globe,
-    description: 'Build innovative web applications and user experiences',
+    description: 'Focuses on creating tech solutions through web/app, AI, machine learning, Blockchain and cybersecurity.',
     color: 'bg-[#BA68C8]',
     delay: 200
   },
   {
     title: 'Hardware Development',
     icon: Cpu,
-    description: 'Connect devices and create smart solutions with IoT technologies',
+    description: 'Involves building systems in mechanical, IoT, and civil engineering for practical applications.',
     color: 'bg-[#26A69A]',
     delay: 400
   }

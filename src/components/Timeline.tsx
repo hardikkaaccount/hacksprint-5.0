@@ -4,25 +4,25 @@ const timelineEvents = [
   {
     emoji: '🟢',
     title: 'Registration Starts',
-    date: '21 April',
+    date: '23 April',
     description: 'Registration opens for all participants'
   },
   {
     emoji: '🛑',
     title: 'Registration Ends',
-    date: '9 May',
+    date: '05 May',
     description: 'Last date to register your team'
   },
   {
     emoji: '📣',
     title: 'Team Selection Announcement',
-    date: '11 May',
+    date: '07 May',
     description: 'Selected teams will be announced'
   },
   {
     emoji: '💳',
     title: 'Payment (for selected teams)',
-    date: '14 May',
+    date: '11 May',
     description: 'Selected teams complete their payment'
   },
   {
