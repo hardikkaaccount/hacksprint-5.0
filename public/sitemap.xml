@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9
+        http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">
+  <!-- Main Page -->
+  <url>
+    <loc>https://hacksprint5.pesemandya.org/</loc>
+    <lastmod>2024-11-01T12:00:00+05:30</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
+  </url>
+  
+  <!-- Section URLs (even though they're on the same page, search engines may index sections) -->
+  <url>
+    <loc>https://hacksprint5.pesemandya.org/#prizes</loc>
+    <lastmod>2024-11-01T12:00:00+05:30</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  
+  <url>
+    <loc>https://hacksprint5.pesemandya.org/#domains</loc>
+    <lastmod>2024-11-01T12:00:00+05:30</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  
+  <url>
+    <loc>https://hacksprint5.pesemandya.org/#resources</loc>
+    <lastmod>2024-11-01T12:00:00+05:30</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  
+  <url>
+    <loc>https://hacksprint5.pesemandya.org/#timeline</loc>
+    <lastmod>2024-11-01T12:00:00+05:30</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  
+  <url>
+    <loc>https://hacksprint5.pesemandya.org/#sponsors</loc>
+    <lastmod>2024-11-01T12:00:00+05:30</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  
+  <url>
+    <loc>https://hacksprint5.pesemandya.org/#footer</loc>
+    <lastmod>2024-11-01T12:00:00+05:30</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+</urlset> 

@@ -1,14 +1,31 @@
+# Allow all web crawlers to access all content (default)
+User-agent: *
+Allow: /
+Disallow: /api/
+
+# Allow Google to access all content
 User-agent: Googlebot
 Allow: /
 
+# Allow Bing to access all content
 User-agent: Bingbot
 Allow: /
 
-User-agent: Twitterbot
+# Allow Yahoo to access all content
+User-agent: Slurp
 Allow: /
 
+# Allow DuckDuckGo to access all content
+User-agent: DuckDuckBot
+Allow: /
+
+# Allow Facebook crawler to access all content for link previews
 User-agent: facebookexternalhit
 Allow: /
 
-User-agent: *
+# Allow Twitter crawler to access all content for link previews
+User-agent: Twitterbot
 Allow: /
+
+# Point to sitemap
+Sitemap: https://hacksprint5.pesemandya.org/sitemap.xml

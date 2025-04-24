@@ -165,12 +165,38 @@ const Index = () => {
       {/* Main content */}
       <div className="relative z-10 flex-1">
         <Header />
-        <Hero onRegisterClick={handleRegisterClick} />
-        <PrizePool />
-        <DomainCards />
-        <Resources />
-        <Timeline />
-        <Sponsors />
+        <main>
+          <section aria-labelledby="hero-heading">
+            <h1 id="hero-heading" className="sr-only">HackSprint 5.0 - A National Level Hackathon by PES College of Engineering</h1>
+            <Hero onRegisterClick={handleRegisterClick} />
+          </section>
+          
+          <section id="prizes" aria-labelledby="prize-heading">
+            <h2 id="prize-heading" className="sr-only">Prize Pool and Awards</h2>
+            <PrizePool />
+          </section>
+          
+          <section id="domains" aria-labelledby="domain-heading">
+            <h2 id="domain-heading" className="sr-only">Hackathon Domains</h2>
+            <DomainCards />
+          </section>
+          
+          <section id="resources" aria-labelledby="resource-heading">
+            <h2 id="resource-heading" className="sr-only">Resources and Learning Materials</h2>
+            <Resources />
+          </section>
+          
+          <section id="timeline" aria-labelledby="timeline-heading">
+            <h2 id="timeline-heading" className="sr-only">Event Timeline</h2>
+            <Timeline />
+          </section>
+          
+          <section id="sponsors" aria-labelledby="sponsor-heading">
+            <h2 id="sponsor-heading" className="sr-only">Our Sponsors</h2>
+            <Sponsors />
+          </section>
+        </main>
+        
         <Footer />
       </div>
 
