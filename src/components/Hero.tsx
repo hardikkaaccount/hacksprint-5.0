@@ -45,7 +45,7 @@ const Hero = ({ onRegisterClick }: HeroProps) => {
             
             <div className="flex items-center justify-start md:w-1/4 md:pl-4">
               <img 
-                src="/iic.png" 
+                src="/iic-nobg-2.png" 
                 alt="IIC Logo" 
                 className="w-20 h-20 rounded-lg"
               />
