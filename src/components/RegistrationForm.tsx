@@ -545,7 +545,7 @@ const RegistrationForm = ({ onClose }: { onClose?: () => void }) => {
               
               {/* Registration Fee Note */}
               <div className="text-amber-400 text-sm p-3 border border-amber-400/30 rounded-md bg-amber-400/10">
-                <p className="font-medium">Note: A registration fee of ₹250 per team member will be collected if the idea gets selected. Wishing you all the best! The results will be announced in the WhatsApp group. You will find the group link after submission — do join!</p>
+                <p className="font-medium">Note: A registration fee of ₹250 per member of the team will be collected if the idea gets selected. Wishing you all the best! The results will be announced in the WhatsApp group. You will find the group link after submission — do join!</p>
               </div>
               
               {/* Submit Button */}
