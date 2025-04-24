@@ -70,15 +70,6 @@ const SuccessPopup = ({
   return (
     <div className="fixed inset-0 flex items-center justify-center z-[100] bg-black/80 backdrop-blur-md">
       <div className="bg-gradient-to-b from-[#0D1117] to-[#161b22] p-6 md:p-8 rounded-xl border border-purple-500/30 w-full max-w-md mx-auto shadow-lg shadow-purple-500/20 relative">
-        <Button 
-          onClick={onClose} 
-          variant="ghost" 
-          size="icon" 
-          className="absolute right-2 top-2 text-gray-400 hover:text-white"
-        >
-          <X className="h-4 w-4" />
-        </Button>
-        
         <div className="mb-6 text-center">
           <div className="w-16 h-16 bg-gradient-to-r from-purple-600 to-blue-500 rounded-full flex items-center justify-center mx-auto mb-4">
             <CheckCircle2 className="h-8 w-8 text-white" />
@@ -286,17 +277,6 @@ const RegistrationForm = ({ onClose }: { onClose?: () => void }) => {
       {showRegistrationForm && (
         <div className="relative bg-black/60 backdrop-blur-md rounded-xl p-4 md:p-6 border border-white/10 max-h-[90vh] overflow-y-auto w-full">
           <DialogTitle className="sr-only">Registration Form</DialogTitle>
-          
-          {onClose && (
-            <Button 
-              onClick={onClose} 
-              variant="ghost" 
-              size="icon" 
-              className="absolute right-2 top-2 z-10 text-gray-400 hover:text-white"
-            >
-              <X className="h-4 w-4" />
-            </Button>
-          )}
           
           <h2 className="text-2xl md:text-4xl font-bold text-center mb-6 bg-clip-text text-transparent bg-gradient-to-r from-white to-gray-400">
             Register Your Team

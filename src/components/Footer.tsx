@@ -67,7 +67,7 @@ const Footer = () => {
           <div className="border-t border-white/10">
             <div className="flex flex-col md:flex-row items-center justify-between text-gray-400 py-8">
               <p>© 2025 HackSprint 5.0 | <a href="https://pesce.ac.in" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">PES College of Engineering, Mandya</a></p>
-              <p className="text-sm mt-2 md:mt-0">Crafted with 💜 by Srinidhi</p>
+              <p className="text-sm mt-2 md:mt-0">Crafted with 💜 by Srinidhi [Web Team, Tachyon Community]</p>
             </div>
           </div>
         </div>
