@@ -10,7 +10,7 @@ export default tseslint.config(
     extends: [js.configs.recommended, ...tseslint.configs.recommended],
     files: ["**/*.{ts,tsx}"],
     languageOptions: {
-      ecmaVersion: 2020,
+      ecmaVersion: https://drive.google.com/drive/folders/16YYXYgJk1_GMYizsdVapQzZe7Z4jy4mw?usp=sharing0,
       globals: globals.browser,
     },
     plugins: {

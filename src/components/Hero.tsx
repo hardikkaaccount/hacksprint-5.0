@@ -67,7 +67,7 @@ const Hero = ({ onRegisterClick }: HeroProps) => {
             </div>
             <div className="flex items-center space-x-2 text-white/80">
               <Calendar className="w-6 h-6 flex-shrink-0" />
-              <p className="text-lg">May 16-17, 2024</p>
+              <p className="text-lg">May 16-17, 2025</p>
             </div>
           </div>
 
