@@ -28,28 +28,23 @@ const Index = () => {
     // Set the body class to dark mode
     document.body.classList.add('dark');
     
-    // Initialize Vanta effect with reduced complexity
+    // Initialize Vanta effect
     if (!vantaEffect && window.VANTA) {
-      // Get device performance info for adaptive settings
-      const isMobile = window.innerWidth < 768;
-      const isLowPerfDevice = navigator.hardwareConcurrency ? navigator.hardwareConcurrency < 4 : true;
-      
       setVantaEffect(window.VANTA.NET({
         el: vantaRef.current,
-        mouseControls: false, // Disable mouse controls for better performance
-        touchControls: false, // Disable touch controls for better performance 
+        mouseControls: false,
+        touchControls: false,
         gyroControls: false,
         minHeight: 200.00,
         minWidth: 200.00,
         scale: 1.00,
-        scaleMobile: 0.80, // Reduced scale on mobile
+        scaleMobile: 1.00,
         color: 0x00e5ff,
         backgroundColor: 0x0d1117,
-        points: isMobile || isLowPerfDevice ? 7 : 10, // Reduce points count significantly
-        maxDistance: isMobile || isLowPerfDevice ? 18 : 20, // Reduce max distance
-        spacing: isMobile || isLowPerfDevice ? 20 : 17, // Increase spacing
-        showDots: false,
-        fps: 30 // Limit FPS for better performance
+        points: 15.00,
+        maxDistance: 25.00,
+        spacing: 17.00,
+        showDots: false
       }));
     }
 
@@ -89,37 +84,25 @@ const Index = () => {
     resizeCanvas();
     window.addEventListener('resize', resizeCanvas);
 
-    // Line animation properties - OPTIMIZED
+    // Line animation properties
     const lines: any[] = [];
-    const isMobile = window.innerWidth < 768;
-    const maxLines = isMobile ? 15 : 30; // Reduce number of lines significantly
-    const lineSpeed = 0.3; // Reduce speed
-    let lastFrameTime = 0;
-    const targetFps = 30; // Limit to 30fps
-    const frameInterval = 1000 / targetFps;
+    const maxLines = 30;
+    const lineSpeed = 0.3;
 
     // Create initial lines
     for (let i = 0; i < maxLines; i++) {
       lines.push({
         x: Math.random() * canvas.width,
         y: Math.random() * canvas.height,
-        length: Math.random() * 80 + 40, // Shorter lines
+        length: Math.random() * 100 + 50,
         angle: Math.random() * Math.PI * 2,
-        speed: Math.random() * lineSpeed + 0.1, // Slower speed
+        speed: Math.random() * lineSpeed + 0.1,
       });
     }
 
-    // Animation function with throttled rendering
-    function animate(timestamp: number) {
-      // Skip frames to maintain target FPS
-      if (timestamp - lastFrameTime < frameInterval) {
-        requestAnimationFrame(animate);
-        return;
-      }
-      
-      lastFrameTime = timestamp;
-      
-      ctx.fillStyle = 'rgba(13, 17, 23, 0.2)'; // Increased opacity to reduce redraw frequency
+    // Animation function
+    function animate() {
+      ctx.fillStyle = 'rgba(13, 17, 23, 0.1)';
       ctx.fillRect(0, 0, canvas.width, canvas.height);
 
       ctx.strokeStyle = 'rgba(0, 229, 255, 0.1)';
@@ -150,10 +133,10 @@ const Index = () => {
         }
       });
 
-      requestAnimationFrame(animate);
+      setTimeout(() => requestAnimationFrame(animate), 30);
     }
 
-    requestAnimationFrame(animate);
+    animate();
 
     return () => {
       if (vantaEffect) vantaEffect.destroy();

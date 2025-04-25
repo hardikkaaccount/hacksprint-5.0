@@ -1,11 +1,18 @@
 import React, { useEffect, useRef } from 'react';
 import ReactDOM from 'react-dom';
 import { 
+  Cloud, 
+  Bot, 
   Code2, 
   Cpu, 
+  Database, 
   Globe, 
   Rocket, 
-  Server
+  Server, 
+  Smartphone, 
+  Wifi, 
+  Zap, 
+  Sparkles 
 } from 'lucide-react';
 
 const randomFloat = (min: number, max: number) => Math.random() * (max - min) + min;
@@ -16,10 +23,6 @@ const FloatingObjects = () => {
   useEffect(() => {
     if (!containerRef.current) return;
     
-    // Detect device capabilities
-    const isMobile = window.innerWidth < 768;
-    const isLowPerfDevice = navigator.hardwareConcurrency ? navigator.hardwareConcurrency < 4 : true;
-    
     const container = containerRef.current;
     const containerWidth = window.innerWidth;
     const containerHeight = window.innerHeight;
@@ -27,24 +30,30 @@ const FloatingObjects = () => {
     // Clear any existing objects
     container.innerHTML = '';
     
-    // Create an array of icons to use - reduced number of icon types
+    // Create an array of icons to use
     const icons = [
+      { component: Cloud, color: 'text-blue-400' },
+      { component: Bot, color: 'text-green-400' },
       { component: Code2, color: 'text-purple-400' },
       { component: Cpu, color: 'text-red-400' },
+      { component: Database, color: 'text-yellow-400' },
       { component: Globe, color: 'text-cyan-400' },
       { component: Rocket, color: 'text-orange-400' },
-      { component: Server, color: 'text-indigo-400' }
+      { component: Server, color: 'text-indigo-400' },
+      { component: Smartphone, color: 'text-pink-400' },
+      { component: Wifi, color: 'text-teal-400' },
+      { component: Zap, color: 'text-amber-400' },
+      { component: Sparkles, color: 'text-violet-400' }
     ];
     
-    // Create objects - significantly fewer objects based on device performance
-    const numberOfObjects = isMobile || isLowPerfDevice ? 5 : 8;
-    const animations = [];
+    // Create objects
+    const numberOfObjects = 15;
     
     for (let i = 0; i < numberOfObjects; i++) {
       const element = document.createElement('div');
       
       // Apply random positioning
-      const size = randomFloat(20, 35); // Smaller size range
+      const size = randomFloat(20, 45);
       const x = randomFloat(0, containerWidth - size);
       const y = randomFloat(0, containerHeight - size);
       
@@ -54,7 +63,7 @@ const FloatingObjects = () => {
       element.style.height = `${size}px`;
       element.style.left = `${x}px`;
       element.style.top = `${y}px`;
-      element.style.opacity = `${randomFloat(0.2, 0.5)}`; // Reduced opacity
+      element.style.opacity = `${randomFloat(0.3, 0.7)}`;
       element.style.zIndex = '1';
       element.style.pointerEvents = 'none';
       
@@ -77,17 +86,18 @@ const FloatingObjects = () => {
       // Add to container
       container.appendChild(element);
       
-      // Apply simpler animation
-      const duration = randomFloat(20, 35); // Longer, slower animation
-      const xMovement = randomFloat(-30, 30); // Less movement
-      const yMovement = randomFloat(-30, 30);
+      // Apply animation
+      const duration = randomFloat(15, 30);
+      const xMovement = randomFloat(-50, 50);
+      const yMovement = randomFloat(-50, 50);
+      const rotation = randomFloat(-180, 180);
       
-      // Create simpler keyframes animation with fewer keyframes
-      const animation = element.animate(
+      // Create keyframes animation
+      element.animate(
         [
-          { transform: 'translate(0, 0)', opacity: randomFloat(0.2, 0.4) },
-          { transform: `translate(${xMovement}px, ${yMovement}px)`, opacity: randomFloat(0.3, 0.5) },
-          { transform: 'translate(0, 0)', opacity: randomFloat(0.2, 0.4) }
+          { transform: 'translate(0, 0) rotate(0deg)', opacity: randomFloat(0.3, 0.5) },
+          { transform: `translate(${xMovement}px, ${yMovement}px) rotate(${rotation}deg)`, opacity: randomFloat(0.4, 0.8) },
+          { transform: 'translate(0, 0) rotate(0deg)', opacity: randomFloat(0.3, 0.5) }
         ],
         {
           duration: duration * 1000,
@@ -96,13 +106,9 @@ const FloatingObjects = () => {
           easing: 'ease-in-out'
         }
       );
-      
-      animations.push(animation);
     }
     
     return () => {
-      // Cancel all animations on cleanup
-      animations.forEach(animation => animation.cancel());
       container.innerHTML = '';
     };
   }, []);
@@ -110,7 +116,7 @@ const FloatingObjects = () => {
   return (
     <div 
       ref={containerRef}
-      className="fixed inset-0 overflow-hidden pointer-events-none z-0 opacity-70"
+      className="fixed inset-0 overflow-hidden pointer-events-none z-0"
     />
   );
 };
