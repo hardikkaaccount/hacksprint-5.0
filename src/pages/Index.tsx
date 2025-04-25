@@ -86,8 +86,8 @@ const Index = () => {
 
     // Line animation properties
     const lines: any[] = [];
-    const maxLines = 30;
-    const lineSpeed = 0.3;
+    const maxLines = 50;
+    const lineSpeed = 0.5;
 
     // Create initial lines
     for (let i = 0; i < maxLines; i++) {
@@ -96,7 +96,7 @@ const Index = () => {
         y: Math.random() * canvas.height,
         length: Math.random() * 100 + 50,
         angle: Math.random() * Math.PI * 2,
-        speed: Math.random() * lineSpeed + 0.1,
+        speed: Math.random() * lineSpeed + 0.2,
       });
     }
 
@@ -133,7 +133,7 @@ const Index = () => {
         }
       });
 
-      setTimeout(() => requestAnimationFrame(animate), 30);
+      requestAnimationFrame(animate);
     }
 
     animate();
