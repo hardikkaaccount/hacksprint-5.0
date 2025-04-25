@@ -1,4 +1,3 @@
-
 import React, { useEffect, useRef } from 'react';
 
 const AnimatedBackground = () => {
@@ -7,8 +6,12 @@ const AnimatedBackground = () => {
   useEffect(() => {
     if (!containerRef.current) return;
     
-    // Create random particles
-    const particleCount = 30;
+    // Detect if on mobile or lower-end device
+    const isMobile = window.innerWidth < 768;
+    const isLowPerfDevice = navigator.hardwareConcurrency ? navigator.hardwareConcurrency < 4 : true;
+    
+    // Reduce particle count based on device capabilities
+    const particleCount = isMobile || isLowPerfDevice ? 10 : 20;
     const container = containerRef.current;
     
     // Remove any existing particles
@@ -17,14 +20,14 @@ const AnimatedBackground = () => {
     // Create new particles
     for (let i = 0; i < particleCount; i++) {
       const particle = document.createElement('div');
-      const size = Math.random() * 8 + 2;
+      const size = Math.random() * 6 + 2; // Smaller size range
       
       particle.className = 'absolute rounded-full';
       particle.style.width = `${size}px`;
       particle.style.height = `${size}px`;
       
       // Assign random colors
-      const colors = ['bg-primary/30', 'bg-secondary/30', 'bg-accent/30', 'bg-white/20', 'bg-purple-400/30', 'bg-indigo-400/30'];
+      const colors = ['bg-primary/20', 'bg-secondary/20', 'bg-white/10']; // Reduced opacity and fewer colors
       particle.classList.add(colors[Math.floor(Math.random() * colors.length)]);
       
       // Set initial position
@@ -34,52 +37,39 @@ const AnimatedBackground = () => {
       container.appendChild(particle);
     }
 
-    // Use Web Animation API for smoother animations
-    Array.from(container.children).forEach(child => {
+    // Use Web Animation API with simpler animations
+    const animations = Array.from(container.children).map(child => {
       const element = child as HTMLElement;
       
-      // Apply random animations with more interesting movement
-      const randomX = Math.random() * 100 - 50;
-      const randomY = Math.random() * 100 - 50;
-      const duration = 8000 + Math.random() * 12000;
-      const delay = Math.random() * 3000;
+      // Apply random animations with simpler movement
+      const randomX = Math.random() * 50 - 25; // Reduced movement range
+      const randomY = Math.random() * 50 - 25;
+      const duration = 10000 + Math.random() * 10000; // Longer but simpler animations
       
-      // Create more complex animation path
-      element.animate([
-        { transform: 'translate(0, 0) scale(0.8)', opacity: 0.4 },
-        { transform: `translate(${randomX * 0.3}px, ${randomY * 0.5}px) scale(1.2)`, opacity: 0.8 },
-        { transform: `translate(${randomX}px, ${randomY * 0.8}px) scale(1)`, opacity: 0.6 },
-        { transform: `translate(${randomX * 0.6}px, ${randomY}px) scale(1.4)`, opacity: 0.9 },
-        { transform: 'translate(0, 0) scale(0.8)', opacity: 0.4 }
+      // Create simpler animation path (only 3 keyframes instead of 5)
+      return element.animate([
+        { transform: 'translate(0, 0)', opacity: 0.4 },
+        { transform: `translate(${randomX}px, ${randomY}px)`, opacity: 0.6 },
+        { transform: 'translate(0, 0)', opacity: 0.4 }
       ], {
         duration,
-        delay,
         iterations: Infinity,
         direction: 'alternate',
         easing: 'ease-in-out'
       });
-      
-      // Add a separate blur animation for some particles
-      if (Math.random() > 0.5) {
-        element.animate([
-          { filter: 'blur(0px)' },
-          { filter: 'blur(2px)' },
-          { filter: 'blur(0px)' }
-        ], {
-          duration: duration * 0.7,
-          delay: delay * 0.5,
-          iterations: Infinity,
-          direction: 'alternate',
-          easing: 'ease-in-out'
-        });
-      }
     });
+    
+    return () => {
+      // Stop all animations on cleanup
+      animations.forEach(animation => animation.cancel());
+      container.innerHTML = '';
+    };
   }, []);
 
   return (
     <div 
       ref={containerRef} 
-      className="fixed inset-0 pointer-events-none overflow-hidden z-0 opacity-60"
+      className="fixed inset-0 pointer-events-none overflow-hidden z-0 opacity-40"
     />
   );
 };
