@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from 'react';
-import ReactDOM from 'react-dom';
+import { createRoot } from 'react-dom/client';
 import { 
   Rocket,
   Cpu,
@@ -19,8 +19,10 @@ const randomFloat = (min: number, max: number) => Math.random() * (max - min) + 
 
 const FloatingObjects = () => {
   const containerRef = useRef<HTMLDivElement>(null);
+  const elementsRef = useRef<Array<HTMLDivElement>>([]);
+  const animationsRef = useRef<Array<Animation>>([]);
   
-  useEffect(() => {
+  const createElements = () => {
     if (!containerRef.current) return;
     
     const container = containerRef.current;
@@ -29,6 +31,8 @@ const FloatingObjects = () => {
     
     // Clear any existing objects
     container.innerHTML = '';
+    elementsRef.current = [];
+    animationsRef.current = [];
     
     // Create an array of icons with more visible colors
     const icons = [
@@ -63,6 +67,7 @@ const FloatingObjects = () => {
         if (objectsCreated >= numberOfObjects) break;
         
         const element = document.createElement('div');
+        elementsRef.current.push(element);
         
         // Apply positioning within the current grid cell (with some randomness)
         const size = randomFloat(15, 30);
@@ -90,13 +95,15 @@ const FloatingObjects = () => {
         iconContainer.style.transform = `rotate(${Math.random() * 360}deg)`;
         element.appendChild(iconContainer);
         
-        // Render the icon using ReactDOM
-        const iconElement = React.createElement(Icon, { 
-          className: color, 
-          size: size,
-          style: { width: '100%', height: '100%' }
-        });
-        ReactDOM.render(iconElement, iconContainer);
+        // Use createRoot instead of ReactDOM.render (which is deprecated)
+        const root = createRoot(iconContainer);
+        root.render(
+          <Icon 
+            className={color} 
+            size={size}
+            style={{ width: '100%', height: '100%' }}
+          />
+        );
         
         // Add to container
         container.appendChild(element);
@@ -109,7 +116,7 @@ const FloatingObjects = () => {
         const rotation = randomFloat(-120, 120);
         
         // Create keyframes animation
-        element.animate(
+        const animation = element.animate(
           [
             { transform: 'translate(0, 0) rotate(0deg)', opacity: randomFloat(0.3, 0.4) },
             { transform: `translate(${xMovement}px, ${yMovement}px) rotate(${rotation}deg)`, opacity: randomFloat(0.35, 0.5) },
@@ -123,37 +130,60 @@ const FloatingObjects = () => {
           }
         );
         
+        // Store animation reference
+        animationsRef.current.push(animation);
+        
         objectsCreated++;
       }
     }
+  };
+  
+  useEffect(() => {
+    createElements();
+    
+    // Periodically check if elements are still visible and recreate if needed
+    const intervalId = setInterval(() => {
+      if (containerRef.current) {
+        const visibleElementCount = elementsRef.current.filter(
+          el => el.isConnected && el.offsetParent !== null
+        ).length;
+        
+        // If more than half the elements are missing, recreate all
+        if (visibleElementCount < elementsRef.current.length / 2) {
+          createElements();
+        }
+      }
+    }, 60000); // Check every minute
     
     // Add resize handler to reposition objects when window size changes
     const handleResize = () => {
       // Clear and recreate the objects on resize
-      container.innerHTML = '';
-      setTimeout(() => {
-        if (containerRef.current) {
-          const newContainer = containerRef.current;
-          const newContainerWidth = window.innerWidth;
-          const newContainerHeight = window.innerHeight;
-          
-          // Recreate objects...
-          // Similar logic would be applied here as above
-          // For simplicity, we'll just reload the page on significant resize
-          if (Math.abs(newContainerWidth - containerWidth) > 200 || 
-              Math.abs(newContainerHeight - containerHeight) > 200) {
-            window.location.reload();
-          }
-        }
-      }, 300);
+      createElements();
     };
     
-    // Add resize listener
-    window.addEventListener('resize', handleResize);
+    // Debounced resize listener
+    let resizeTimer: NodeJS.Timeout | null = null;
+    const debouncedResize = () => {
+      if (resizeTimer) clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(handleResize, 300);
+    };
+    
+    window.addEventListener('resize', debouncedResize);
     
     return () => {
-      container.innerHTML = '';
-      window.removeEventListener('resize', handleResize);
+      if (containerRef.current) {
+        containerRef.current.innerHTML = '';
+      }
+      window.removeEventListener('resize', debouncedResize);
+      clearInterval(intervalId);
+      if (resizeTimer) clearTimeout(resizeTimer);
+      
+      // Stop all animations
+      animationsRef.current.forEach(animation => {
+        if (animation && animation.cancel) {
+          animation.cancel();
+        }
+      });
     };
   }, []);
 
