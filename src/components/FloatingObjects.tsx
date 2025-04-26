@@ -1,18 +1,18 @@
 import React, { useEffect, useRef } from 'react';
 import ReactDOM from 'react-dom';
 import { 
-  Cloud, 
-  Bot, 
-  Code2, 
-  Cpu, 
-  Database, 
-  Globe, 
-  Rocket, 
-  Server, 
-  Smartphone, 
-  Wifi, 
-  Zap, 
-  Sparkles 
+  Rocket,
+  Cpu,
+  Brain,
+  Globe,
+  Zap,
+  Sparkles,
+  Wifi,
+  Cloud,
+  Server,
+  Smartphone,
+  Database,
+  Bot
 } from 'lucide-react';
 
 const randomFloat = (min: number, max: number) => Math.random() * (max - min) + min;
@@ -32,22 +32,22 @@ const FloatingObjects = () => {
     
     // Create an array of icons to use
     const icons = [
-      { component: Cloud, color: 'text-blue-400' },
-      { component: Bot, color: 'text-green-400' },
-      { component: Code2, color: 'text-purple-400' },
-      { component: Cpu, color: 'text-red-400' },
-      { component: Database, color: 'text-yellow-400' },
-      { component: Globe, color: 'text-cyan-400' },
-      { component: Rocket, color: 'text-orange-400' },
+      { component: Rocket, color: 'text-red-400' },
+      { component: Cpu, color: 'text-blue-400' },
+      { component: Brain, color: 'text-purple-400' },
+      { component: Globe, color: 'text-green-400' },
+      { component: Zap, color: 'text-yellow-400' },
+      { component: Sparkles, color: 'text-pink-400' },
+      { component: Wifi, color: 'text-cyan-400' },
+      { component: Cloud, color: 'text-blue-300' },
       { component: Server, color: 'text-indigo-400' },
-      { component: Smartphone, color: 'text-pink-400' },
-      { component: Wifi, color: 'text-teal-400' },
-      { component: Zap, color: 'text-amber-400' },
-      { component: Sparkles, color: 'text-violet-400' }
+      { component: Smartphone, color: 'text-orange-400' },
+      { component: Database, color: 'text-amber-500' },
+      { component: Bot, color: 'text-lime-400' }
     ];
     
     // Create objects
-    const numberOfObjects = 15;
+    const numberOfObjects = 25;
     
     for (let i = 0; i < numberOfObjects; i++) {
       const element = document.createElement('div');
