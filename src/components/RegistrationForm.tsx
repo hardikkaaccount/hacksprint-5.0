@@ -223,6 +223,18 @@ const RegistrationForm = ({ onClose }: { onClose?: () => void }) => {
         return;
       }
       
+      // Additional file validation
+      if (selectedFile.type !== 'application/pdf') {
+        setFormStatus('error');
+        setStatusMessage('❌ The file format is incorrect. Please upload a valid PDF file.');
+        toast({
+          title: "Invalid File Format",
+          description: "Only PDF files are accepted for project proposals",
+          variant: "destructive",
+        });
+        return;
+      }
+      
       // Convert form values to RegistrationData type
       const registrationData: RegistrationData = {
         teamName: values.teamName,
@@ -240,6 +252,9 @@ const RegistrationForm = ({ onClose }: { onClose?: () => void }) => {
         member4USN: values.member4USN || "",
         pptFile: selectedFile,
       };
+      
+      // Update loading message
+      setStatusMessage('🚀 Processing your registration...\n\n⏳ Uploading your PDF file. Please do not close this window.');
       
       // Submit to Google Sheets
       const result = await submitRegistrationToGoogleSheets(registrationData);
