@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Award, Gift, Trophy, Briefcase, Rocket } from 'lucide-react';
+import { Award, Gift, Trophy, Briefcase, Rocket, Zap } from 'lucide-react';
 
 const PrizePool = () => {
   const titleRef = useRef<HTMLHeadingElement>(null);
@@ -65,7 +65,7 @@ const PrizePool = () => {
             className="text-4xl font-bold mb-6 bg-clip-text text-transparent bg-gradient-to-r from-prize via-yellow-400 to-amber-300 opacity-0 transform -translate-y-10"
             style={{ transition: 'opacity 0.8s ease-out, transform 0.8s ease-out' }}
           >
-            Prize Pool
+            Prize Pool & Opportunities
           </h2>
           
           {/* Enhanced Prize Pool Showcase - Animated */}
@@ -79,20 +79,43 @@ const PrizePool = () => {
               
               <h2 className="text-2xl md:text-3xl font-bold text-white mb-4">MASSIVE PRIZE POOL</h2>
               
-              <div className="flex flex-col md:flex-row items-center justify-center gap-6 md:gap-10 mb-4">
+              <div className="flex flex-col md:flex-row items-center justify-center gap-6 md:gap-10 mb-8">
                 <div className={`flex items-center gap-3 transition-all duration-700 delay-300 transform ${animated ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-8'}`}>
                   <Trophy className="h-10 w-10 text-yellow-400" />
                   <span className="text-3xl md:text-5xl font-bold bg-gradient-to-r from-yellow-200 via-yellow-400 to-yellow-200 text-transparent bg-clip-text">₹60,000</span>
                 </div>
+              </div>
+              
+              {/* Career Opportunities - Enhanced Section */}
+              <div className="bg-black/30 border border-white/10 rounded-lg p-4 mb-6">
+                <h3 className="text-xl md:text-2xl font-bold text-cyan-400 mb-4">CAREER-DEFINING OPPORTUNITIES</h3>
                 
-                <div className={`flex items-center gap-0 transition-all duration-700 delay-500 transform ${animated ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
-                  <Briefcase className="h-8 w-8 text-cyan-400 flex-shrink-0" />
-                  <span className="text-xl md:text-2xl font-bold text-cyan-400">Internship Opportunities</span>
-                </div>
-                
-                <div className={`flex items-center gap-0 transition-all duration-700 delay-700 transform ${animated ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-8'}`}>
-                  <Rocket className="h-8 w-8 text-pink-400 flex-shrink-0" />
-                  <span className="text-xl md:text-2xl font-bold text-pink-400">Startup Incubation</span>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  {/* Internship Opportunity */}
+                  <div className={`bg-gradient-to-br from-blue-900/50 to-cyan-900/30 border border-blue-500/30 rounded-lg p-4 transform transition-all duration-700 delay-500 ${animated ? 'opacity-100 scale-100' : 'opacity-0 scale-95'}`}>
+                    <div className="flex items-center mb-2">
+                      <div className="p-2 bg-blue-500/50 rounded-full mr-3">
+                        <Briefcase className="h-8 w-8 text-blue-200" />
+                      </div>
+                      <h4 className="text-xl font-bold text-white">Internship Placements</h4>
+                    </div>
+                    <p className="text-blue-200/80 text-left">
+                      Top teams will receive internship offers from our industry partners, giving you real-world experience and professional connections.
+                    </p>
+                  </div>
+                  
+                  {/* Startup Incubation */}
+                  <div className={`bg-gradient-to-br from-purple-900/50 to-pink-900/30 border border-purple-500/30 rounded-lg p-4 transform transition-all duration-700 delay-700 ${animated ? 'opacity-100 scale-100' : 'opacity-0 scale-95'}`}>
+                    <div className="flex items-center mb-2">
+                      <div className="p-2 bg-purple-500/50 rounded-full mr-3">
+                        <Rocket className="h-8 w-8 text-purple-200" />
+                      </div>
+                      <h4 className="text-xl font-bold text-white">Startup Incubation</h4>
+                    </div>
+                    <p className="text-purple-200/80 text-left">
+                      Turn your hackathon project into a real business with mentorship, resources, and funding opportunities through our incubation partners.
+                    </p>
+                  </div>
                 </div>
               </div>
               
@@ -104,40 +127,6 @@ const PrizePool = () => {
               <div className="absolute inset-0 border border-white/30 rounded-xl pulse-animation"></div>
             </div>
           </div>
-{/*           
-          <p className="text-white/80 text-xl mb-10">What you can win in this hackathon</p>
-          
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-8">
-            <div 
-              ref={el => cardsRef.current[0] = el}
-              className="bg-black/20 backdrop-blur rounded-lg p-6 border border-white/10 opacity-0 transform translate-y-10 hover:bg-black/30 hover:border-primary/50 transition-all duration-300 hover:scale-105 hover:shadow-lg hover:shadow-primary/10"
-              style={{ transition: 'opacity 0.8s ease-out, transform 0.8s ease-out' }}
-            >
-              <Award className="mx-auto mb-4 text-prize h-12 w-12 animate-bounce" />
-              <h3 className="font-semibold text-white text-lg mb-2">Cash Prizes</h3>
-              <p className="text-white/70 text-sm">Win your share of the ₹60,000 prize pool</p>
-            </div>
-            
-            <div 
-              ref={el => cardsRef.current[1] = el}
-              className="bg-black/20 backdrop-blur rounded-lg p-6 border border-white/10 opacity-0 transform translate-y-10 hover:bg-black/30 hover:border-primary/50 transition-all duration-300 hover:scale-105 hover:shadow-lg hover:shadow-primary/10"
-              style={{ transition: 'opacity 0.8s ease-out, transform 0.8s ease-out' }}
-            >
-              <Rocket className="mx-auto mb-4 text-prize h-12 w-12 animate-bounce" style={{ animationDelay: '0.2s' }} />
-              <h3 className="font-semibold text-white text-lg mb-2">Internship & Startup Incubation</h3>
-              <p className="text-white/70 text-sm">Get Internship and Startup Incubation opportunities</p>
-            </div>
-            
-            <div 
-              ref={el => cardsRef.current[2] = el}
-              className="bg-black/20 backdrop-blur rounded-lg p-6 border border-white/10 opacity-0 transform translate-y-10 hover:bg-black/30 hover:border-primary/50 transition-all duration-300 hover:scale-105 hover:shadow-lg hover:shadow-primary/10"
-              style={{ transition: 'opacity 0.8s ease-out, transform 0.8s ease-out' }}
-            >
-              <Gift className="mx-auto mb-4 text-prize h-12 w-12 animate-bounce" style={{ animationDelay: '0.4s' }} />
-              <h3 className="font-semibold text-white text-lg mb-2">Cool Goodies</h3>
-              <p className="text-white/70 text-sm">Take home awesome swag and tech gadgets</p>
-            </div>
-          </div> */}
         </div>
       </div>
     </section>
