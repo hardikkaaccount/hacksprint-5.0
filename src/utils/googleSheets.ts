@@ -30,18 +30,37 @@ const optimizeFile = async (file: File): Promise<string> => {
   return new Promise((resolve, reject) => {
     const reader = new FileReader();
     
-    reader.onload = () => {
-      const base64String = reader.result?.toString() || '';
-      // Extract the base64 data without the prefix (e.g., "data:application/pdf;base64,")
-      const base64Data = base64String.split(',')[1] || '';
-      resolve(base64Data);
+    reader.onload = (event) => {
+      try {
+        if (!event.target || !event.target.result) {
+          reject(new Error('Failed to read file'));
+          return;
+        }
+        
+        // Get the base64 data
+        const base64String = event.target.result.toString();
+        // Extract just the base64 content without the MIME prefix
+        const base64Data = base64String.split(',')[1] || '';
+        
+        if (!base64Data) {
+          reject(new Error('Failed to extract base64 data'));
+          return;
+        }
+        
+        console.log(`Processed file: ${file.name}, Size: ${Math.round(base64Data.length / 1024)} KB`);
+        resolve(base64Data);
+      } catch (processingError) {
+        console.error('File processing error:', processingError);
+        reject(processingError);
+      }
     };
     
-    reader.onerror = () => {
-      reject(new Error('Failed to read the file'));
+    reader.onerror = (error) => {
+      console.error('FileReader error:', error);
+      reject(new Error('Error reading file'));
     };
     
-    // Read the entire file at once for PDF files to prevent corruption
+    // Read the entire file as data URL (includes base64 encoding)
     reader.readAsDataURL(file);
   });
 };
@@ -51,6 +70,17 @@ const optimizeFile = async (file: File): Promise<string> => {
  */
 export const submitRegistrationToGoogleSheets = async (data: RegistrationData): Promise<{success: boolean, message: string, whatsappLink?: string}> => {
   try {
+    // Generate a clean team name (remove special characters and spaces)
+    const cleanTeamName = data.teamName.replace(/[^\w]/g, '_');
+    
+    // Create unique timestamp value
+    const timestamp = Date.now();
+    
+    // Generate filename: TeamName_Timestamp.pdf
+    const generatedFilename = `${cleanTeamName}_${timestamp}.pdf`;
+    
+    console.log(`Generated filename for submission: ${generatedFilename}`);
+    
     // Create FormData with optimized data structure
     const formData = new FormData();
     
@@ -71,7 +101,9 @@ export const submitRegistrationToGoogleSheets = async (data: RegistrationData): 
       member4Name: data.member4Name || '',
       member4USN: data.member4USN || '',
       sheetId: SHEET_ID,
-      folderId: DRIVE_FOLDER_ID
+      folderId: DRIVE_FOLDER_ID,
+      originalFileName: data.pptFile ? data.pptFile.name : '',
+      submissionFileName: generatedFilename
     };
 
     // Add the registration data as a single JSON string
@@ -80,23 +112,39 @@ export const submitRegistrationToGoogleSheets = async (data: RegistrationData): 
     // Handle file upload
     if (data.pptFile) {
       try {
+        console.log(`Processing file: ${data.pptFile.name}, Size: ${(data.pptFile.size / (1024 * 1024)).toFixed(2)} MB`);
+        
         const optimizedFile = await optimizeFile(data.pptFile);
         
-        // Construct a cleaner file object with essential metadata
-        formData.append('fileData', JSON.stringify({
-          content: optimizedFile,
-          type: 'application/pdf', // Enforce PDF type
-          name: data.pptFile.name,
-          extension: 'pdf',
-          size: data.pptFile.size
-        }));
+        // Verify that we got valid data back
+        if (!optimizedFile) {
+          console.error("Invalid or empty file data");
+          return {
+            success: false,
+            message: `❌ The PDF file could not be processed correctly. Please try again or contact support.`
+          };
+        }
         
-        console.log("File processed successfully");
+        console.log(`File encoded successfully. Data length: ${optimizedFile.length} chars`);
+        
+        // Create a proper file payload using the same generated filename
+        const filePayload = {
+          content: optimizedFile,
+          type: 'application/pdf',
+          name: generatedFilename, // Use the same generated filename
+          originalName: data.pptFile.name, // Keep original name for reference
+          extension: 'pdf',
+          size: data.pptFile.size,
+          lastModified: data.pptFile.lastModified
+        };
+        
+        formData.append('fileData', JSON.stringify(filePayload));
+        console.log("File data appended to form submission");
       } catch (err) {
         console.error("Error processing file:", err);
         return {
           success: false,
-          message: `❌ There was an error processing your PDF file. Please try again with a different PDF file or contact support.`
+          message: `❌ There was an error processing your PDF file: ${err instanceof Error ? err.message : 'Unknown error'}. Please try again or contact support.`
         };
       }
     }

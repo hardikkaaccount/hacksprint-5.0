@@ -164,44 +164,41 @@ const RegistrationForm = ({ onClose }: { onClose?: () => void }) => {
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0] || null;
     if (file) {
+      console.log(`File selected: ${file.name}, Type: ${file.type}, Size: ${(file.size / (1024 * 1024)).toFixed(2)} MB`);
+      
       // Check if file type is allowed (PDF only)
       const allowedTypes = [
         'application/pdf'
       ];
       
-      // Check file size (limit to 3MB to prevent corruption)
-      const maxSizeInBytes = 3 * 1024 * 1024; // 3MB
+      // Validate file type thoroughly
+      const isPdf = 
+        allowedTypes.includes(file.type) || 
+        file.name.toLowerCase().endsWith('.pdf');
       
-      if (!allowedTypes.includes(file.type) || !file.name.toLowerCase().endsWith('.pdf')) {
+      if (!isPdf) {
         toast({
           title: "Invalid file type",
-          description: "Please upload a PDF file only",
+          description: "Please upload a PDF file only (.pdf extension)",
           variant: "destructive",
         });
         setSelectedFile(null);
         if (fileInputRef.current) fileInputRef.current.value = '';
-      } else if (file.size > maxSizeInBytes) {
-        toast({
-          title: "File too large",
-          description: "Please upload a PDF file smaller than 3MB to prevent corruption",
-          variant: "destructive",
-        });
-        setSelectedFile(null);
-        if (fileInputRef.current) fileInputRef.current.value = '';
-      } else {
-        // File is valid, set it
-        console.log(`File selected: ${file.name}, Size: ${(file.size / 1024 / 1024).toFixed(2)}MB`);
-        setSelectedFile(file);
-        // Set the file in the form
-        form.setValue('pptFile', file);
-        
-        // Feedback for successful file selection
-        toast({
-          title: "File selected",
-          description: `${file.name} (${(file.size / 1024 / 1024).toFixed(2)}MB) ready to upload`,
-          variant: "default",
-        });
+        return;
       }
+      
+      // File is valid, set it
+      console.log(`File validated: ${file.name}, Size: ${(file.size / (1024 * 1024)).toFixed(2)}MB`);
+      setSelectedFile(file);
+      // Set the file in the form
+      form.setValue('pptFile', file);
+      
+      // Feedback for successful file selection
+      toast({
+        title: "File selected",
+        description: `${file.name} (${(file.size / (1024 * 1024)).toFixed(2)}MB) ready to upload`,
+        variant: "default",
+      });
     }
   };
 
@@ -516,10 +513,10 @@ const RegistrationForm = ({ onClose }: { onClose?: () => void }) => {
                 </div>
               </div>
               
-              {/* PPT Upload Field */}
+              {/* PDF Upload Field */}
               <div className="space-y-2">
                 <div className="flex items-center justify-between">
-                  <FormLabel htmlFor="pptFile">📎 PDF Project Proposal (In pdf format)</FormLabel>
+                  <FormLabel htmlFor="pptFile">📎 PDF Project Proposal</FormLabel>
                   <a 
                     href="https://drive.google.com/drive/folders/1NHNXRBMk1gtzMSTHOYmDaUomQzZQfLop?usp=sharing" 
                     target="_blank" 
@@ -554,9 +551,18 @@ const RegistrationForm = ({ onClose }: { onClose?: () => void }) => {
                     {selectedFile ? selectedFile.name : "No file chosen"}
                   </span>
                 </div>
-                <p className="text-xs text-amber-400 mt-1">
-                  Important: PDF files must be smaller than 3MB to prevent corruption
-                </p>
+                
+                <div className="bg-blue-950/30 border border-blue-400/20 rounded-md p-2 mt-2">
+                  <p className="text-xs text-blue-300 font-medium">
+                    <strong>PDF Requirements:</strong>
+                  </p>
+                  <ul className="text-xs text-blue-300/90 list-disc list-inside mt-1 space-y-1">
+                    <li>Upload your project proposal as a PDF file (.pdf extension)</li>
+                    <li>Ensure your PDF opens correctly before uploading</li>
+                    <li>Please use simple filenames without special characters</li>
+                    <li>For large files, please be patient during upload</li>
+                  </ul>
+                </div>
               </div>
               
               {/* Form Status */}
