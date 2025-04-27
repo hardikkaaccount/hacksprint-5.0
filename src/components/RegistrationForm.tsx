@@ -559,7 +559,6 @@ const RegistrationForm = ({ onClose }: { onClose?: () => void }) => {
                   <ul className="text-xs text-blue-300/90 list-disc list-inside mt-1 space-y-1">
                     <li>Upload your project proposal as a PDF file (.pdf extension)</li>
                     <li>Ensure your PDF opens correctly before uploading</li>
-                    <li>Please use simple filenames without special characters</li>
                     <li>For large files, please be patient during upload</li>
                   </ul>
                 </div>

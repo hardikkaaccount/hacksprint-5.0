@@ -70,17 +70,6 @@ const optimizeFile = async (file: File): Promise<string> => {
  */
 export const submitRegistrationToGoogleSheets = async (data: RegistrationData): Promise<{success: boolean, message: string, whatsappLink?: string}> => {
   try {
-    // Generate a clean team name (remove special characters and spaces)
-    const cleanTeamName = data.teamName.replace(/[^\w]/g, '_');
-    
-    // Create unique timestamp value
-    const timestamp = Date.now();
-    
-    // Generate filename: TeamName_Timestamp.pdf
-    const generatedFilename = `${cleanTeamName}_${timestamp}.pdf`;
-    
-    console.log(`Generated filename for submission: ${generatedFilename}`);
-    
     // Create FormData with optimized data structure
     const formData = new FormData();
     
@@ -103,7 +92,7 @@ export const submitRegistrationToGoogleSheets = async (data: RegistrationData): 
       sheetId: SHEET_ID,
       folderId: DRIVE_FOLDER_ID,
       originalFileName: data.pptFile ? data.pptFile.name : '',
-      submissionFileName: generatedFilename
+      submissionFileName: data.pptFile ? `${data.teamName.replace(/[^\w]/g, '_')}_${Date.now()}.pdf` : ''
     };
 
     // Add the registration data as a single JSON string
@@ -127,11 +116,22 @@ export const submitRegistrationToGoogleSheets = async (data: RegistrationData): 
         
         console.log(`File encoded successfully. Data length: ${optimizedFile.length} chars`);
         
-        // Create a proper file payload using the same generated filename
+        // Generate a clean team name (remove special characters and spaces)
+        const cleanTeamName = data.teamName.replace(/[^\w]/g, '_');
+        
+        // Create unique timestamp value
+        const timestamp = Date.now();
+        
+        // Generate filename: TeamName_Timestamp.pdf
+        const generatedFilename = `${cleanTeamName}_${timestamp}.pdf`;
+        
+        console.log(`Generated filename: ${generatedFilename}`);
+        
+        // Create a proper file payload without size restrictions
         const filePayload = {
           content: optimizedFile,
           type: 'application/pdf',
-          name: generatedFilename, // Use the same generated filename
+          name: generatedFilename, // Use the generated filename
           originalName: data.pptFile.name, // Keep original name for reference
           extension: 'pdf',
           size: data.pptFile.size,
