@@ -164,19 +164,15 @@ const RegistrationForm = ({ onClose }: { onClose?: () => void }) => {
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0] || null;
     if (file) {
-      // Check if file type is allowed
+      // Check if file type is allowed (PDF only)
       const allowedTypes = [
-        'application/pdf',
-        'application/msword',
-        'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
-        'application/vnd.ms-powerpoint',
-        'application/vnd.openxmlformats-officedocument.presentationml.presentation'
+        'application/pdf'
       ];
       
       if (!allowedTypes.includes(file.type)) {
         toast({
           title: "Invalid file type",
-          description: "Please upload a PDF, DOC, DOCX, PPT, or PPTX file",
+          description: "Please upload a PDF file only",
           variant: "destructive",
         });
         setSelectedFile(null);
@@ -198,10 +194,10 @@ const RegistrationForm = ({ onClose }: { onClose?: () => void }) => {
       // Ensure the file is set
       if (!selectedFile) {
         setFormStatus('error');
-        setStatusMessage('❌ Please upload your PPT file to complete the registration.');
+        setStatusMessage('❌ Please upload your PDF project proposal to complete the registration.');
         toast({
           title: "Missing File",
-          description: "Your PPT presentation is required for registration",
+          description: "Your PDF project proposal is required for registration",
           variant: "destructive",
         });
         return;
@@ -503,7 +499,7 @@ const RegistrationForm = ({ onClose }: { onClose?: () => void }) => {
               {/* PPT Upload Field */}
               <div className="space-y-2">
                 <div className="flex items-center justify-between">
-                  <FormLabel htmlFor="pptFile">📎 PPT Upload Field</FormLabel>
+                  <FormLabel htmlFor="pptFile">📎 PDF Project Proposal (In pdf format)</FormLabel>
                   <a 
                     href="https://drive.google.com/drive/folders/1NHNXRBMk1gtzMSTHOYmDaUomQzZQfLop?usp=sharing" 
                     target="_blank" 
@@ -522,14 +518,14 @@ const RegistrationForm = ({ onClose }: { onClose?: () => void }) => {
                     onClick={() => fileInputRef.current?.click()}
                   >
                     <Upload className="mr-2 h-4 w-4" />
-                    Choose File
+                    Choose PDF File
                   </Button>
                   
                   <input
                     ref={fileInputRef}
                     id="pptFile"
                     type="file"
-                    accept=".pdf,.doc,.docx,.ppt,.pptx,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document,application/vnd.ms-powerpoint,application/vnd.openxmlformats-officedocument.presentationml.presentation"
+                    accept=".pdf,application/pdf"
                     onChange={handleFileChange}
                     className="hidden"
                   />
