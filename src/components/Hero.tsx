@@ -1,5 +1,5 @@
 import React from 'react';
-import { Calendar, MapPin } from 'lucide-react';
+import { Calendar, MapPin, Briefcase, Rocket } from 'lucide-react';
 
 interface HeroProps {
   onRegisterClick: () => void;
@@ -24,9 +24,21 @@ const Hero = ({ onRegisterClick }: HeroProps) => {
           HackSprint 5.0
         </h1>
         
-        <p className="text-xl md:text-2xl text-white/90 mb-8">
+        <p className="text-xl md:text-2xl text-white/90 mb-4">
           Join us for an exciting hackathon experience with amazing prizes and opportunities!
         </p>
+        
+        {/* Opportunity Badges */}
+        <div className="flex flex-wrap justify-center gap-3 mb-8">
+          <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-gradient-to-r from-blue-600/40 to-cyan-600/40 backdrop-blur-md rounded-full border border-blue-400/30 shadow-sm">
+            <Briefcase className="w-4 h-4 text-blue-300" />
+            <span className="text-sm font-medium text-white">Internship Opportunities</span>
+          </div>
+          <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-gradient-to-r from-purple-600/40 to-pink-600/40 backdrop-blur-md rounded-full border border-purple-400/30 shadow-sm">
+            <Rocket className="w-4 h-4 text-purple-300" />
+            <span className="text-sm font-medium text-white">Startup Incubation</span>
+          </div>
+        </div>
 
         <div className="flex flex-col items-center space-y-8">
           {/* College logo and name */}
