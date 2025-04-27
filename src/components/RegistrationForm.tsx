@@ -169,7 +169,10 @@ const RegistrationForm = ({ onClose }: { onClose?: () => void }) => {
         'application/pdf'
       ];
       
-      if (!allowedTypes.includes(file.type)) {
+      // Check file size (limit to 10MB)
+      const maxSizeInBytes = 10 * 1024 * 1024; // 10MB
+      
+      if (!allowedTypes.includes(file.type) || !file.name.toLowerCase().endsWith('.pdf')) {
         toast({
           title: "Invalid file type",
           description: "Please upload a PDF file only",
@@ -177,10 +180,27 @@ const RegistrationForm = ({ onClose }: { onClose?: () => void }) => {
         });
         setSelectedFile(null);
         if (fileInputRef.current) fileInputRef.current.value = '';
+      } else if (file.size > maxSizeInBytes) {
+        toast({
+          title: "File too large",
+          description: "Please upload a PDF file smaller than 10MB",
+          variant: "destructive",
+        });
+        setSelectedFile(null);
+        if (fileInputRef.current) fileInputRef.current.value = '';
       } else {
+        // File is valid, set it
+        console.log(`File selected: ${file.name}, Size: ${(file.size / 1024 / 1024).toFixed(2)}MB`);
         setSelectedFile(file);
         // Set the file in the form
         form.setValue('pptFile', file);
+        
+        // Feedback for successful file selection
+        toast({
+          title: "File selected",
+          description: `${file.name} (${(file.size / 1024 / 1024).toFixed(2)}MB) ready to upload`,
+          variant: "default",
+        });
       }
     }
   };

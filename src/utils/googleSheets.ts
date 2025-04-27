@@ -27,16 +27,22 @@ export interface RegistrationData {
 
 // Function to optimize file size before upload
 const optimizeFile = async (file: File): Promise<string> => {
-  return new Promise((resolve) => {
+  return new Promise((resolve, reject) => {
     const reader = new FileReader();
+    
     reader.onload = () => {
-      resolve(reader.result?.toString().split(',')[1] || '');
+      const base64String = reader.result?.toString() || '';
+      // Extract the base64 data without the prefix (e.g., "data:application/pdf;base64,")
+      const base64Data = base64String.split(',')[1] || '';
+      resolve(base64Data);
     };
-    // Read in chunks for better performance
-    const chunk = 1024 * 1024; // 1MB chunks
-    const start = 0;
-    const end = Math.min(chunk, file.size);
-    reader.readAsDataURL(file.slice(start, end));
+    
+    reader.onerror = () => {
+      reject(new Error('Failed to read the file'));
+    };
+    
+    // Read the entire file at once for PDF files to prevent corruption
+    reader.readAsDataURL(file);
   });
 };
 
@@ -73,14 +79,26 @@ export const submitRegistrationToGoogleSheets = async (data: RegistrationData): 
     
     // Handle file upload
     if (data.pptFile) {
-      const optimizedFile = await optimizeFile(data.pptFile);
-      formData.append('fileData', JSON.stringify({
-        content: optimizedFile,
-        type: data.pptFile.type,
-        name: data.pptFile.name,
-        // Add file extension for better handling on the server side
-        extension: data.pptFile.name.split('.').pop()?.toLowerCase()
-      }));
+      try {
+        const optimizedFile = await optimizeFile(data.pptFile);
+        
+        // Construct a cleaner file object with essential metadata
+        formData.append('fileData', JSON.stringify({
+          content: optimizedFile,
+          type: 'application/pdf', // Enforce PDF type
+          name: data.pptFile.name,
+          extension: 'pdf',
+          size: data.pptFile.size
+        }));
+        
+        console.log("File processed successfully");
+      } catch (err) {
+        console.error("Error processing file:", err);
+        return {
+          success: false,
+          message: `❌ There was an error processing your PDF file. Please try again with a different PDF file or contact support.`
+        };
+      }
     }
 
     console.log("Processing your registration...");
