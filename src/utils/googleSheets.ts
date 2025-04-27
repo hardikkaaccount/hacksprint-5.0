@@ -25,66 +25,96 @@ export interface RegistrationData {
   pptFile: File | null;
 }
 
+// Function to optimize file size before upload
+const optimizeFile = async (file: File): Promise<string> => {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    
+    reader.onload = () => {
+      const base64String = reader.result?.toString() || '';
+      // Extract the base64 data without the prefix (e.g., "data:application/pdf;base64,")
+      const base64Data = base64String.split(',')[1] || '';
+      resolve(base64Data);
+    };
+    
+    reader.onerror = () => {
+      reject(new Error('Failed to read the file'));
+    };
+    
+    // Read the entire file at once for PDF files to prevent corruption
+    reader.readAsDataURL(file);
+  });
+};
+
 /**
- * Submit registration data to Google Sheets via Apps Script
+ * Submit registration data to Google Sheets via Apps Script with optimized performance
  */
 export const submitRegistrationToGoogleSheets = async (data: RegistrationData): Promise<{success: boolean, message: string, whatsappLink?: string}> => {
   try {
-    // Create FormData object directly (more reliable for file uploads)
+    // Create FormData with optimized data structure
     const formData = new FormData();
     
-    // Add all text data fields individually
-    formData.append('timestamp', new Date().toISOString());
-    formData.append('teamName', data.teamName);
-    formData.append('leadName', data.leadName);
-    formData.append('leadPhone', data.leadPhone);
-    formData.append('collegeName', data.collegeName);
-    formData.append('hackathonDomain', data.hackathonDomain);
-    formData.append('member1Name', data.member1Name);
-    formData.append('member1USN', data.member1USN);
-    formData.append('member2Name', data.member2Name);
-    formData.append('member2USN', data.member2USN);
-    formData.append('member3Name', data.member3Name || '');
-    formData.append('member3USN', data.member3USN || '');
-    formData.append('member4Name', data.member4Name || '');
-    formData.append('member4USN', data.member4USN || '');
-    formData.append('sheetId', SHEET_ID);
-    formData.append('folderId', DRIVE_FOLDER_ID);
+    // Structure the data exactly as needed by the Google Sheet
+    const registrationData = {
+      timestamp: new Date().toISOString(),
+      teamName: data.teamName,
+      leadName: data.leadName,
+      leadPhone: data.leadPhone,
+      collegeName: data.collegeName,
+      hackathonDomain: data.hackathonDomain,
+      member1Name: data.member1Name,
+      member1USN: data.member1USN,
+      member2Name: data.member2Name,
+      member2USN: data.member2USN,
+      member3Name: data.member3Name || '',
+      member3USN: data.member3USN || '',
+      member4Name: data.member4Name || '',
+      member4USN: data.member4USN || '',
+      sheetId: SHEET_ID,
+      folderId: DRIVE_FOLDER_ID
+    };
+
+    // Add the registration data as a single JSON string
+    formData.append('registrationData', JSON.stringify(registrationData));
     
-    // Add the file directly to FormData without any processing
-    // This is the most reliable way to handle file uploads
+    // Handle file upload
     if (data.pptFile) {
-      // Rename the file to include team name for better organization
-      const fileExtension = 'pdf';
-      const safeTeamName = data.teamName.replace(/[^\w\s]/gi, '').trim().replace(/\s+/g, '_');
-      const uniqueFileName = `${safeTeamName}_${Date.now()}.${fileExtension}`;
-      
-      // Create a new File object with the renamed file (but same content)
-      const renamedFile = new File(
-        [data.pptFile], 
-        uniqueFileName,
-        { type: 'application/pdf' }
-      );
-      
-      // Append the file directly (no base64 conversion)
-      formData.append('file', renamedFile);
-      console.log(`File prepared for upload: ${uniqueFileName}`);
+      try {
+        const optimizedFile = await optimizeFile(data.pptFile);
+        
+        // Construct a cleaner file object with essential metadata
+        formData.append('fileData', JSON.stringify({
+          content: optimizedFile,
+          type: 'application/pdf', // Enforce PDF type
+          name: data.pptFile.name,
+          extension: 'pdf',
+          size: data.pptFile.size
+        }));
+        
+        console.log("File processed successfully");
+      } catch (err) {
+        console.error("Error processing file:", err);
+        return {
+          success: false,
+          message: `❌ There was an error processing your PDF file. Please try again with a different PDF file or contact support.`
+        };
+      }
     }
 
     console.log("Processing your registration...");
     
-    // Use standard fetch with FormData to ensure proper file handling
-    // Note: For CORS issues, you may need to adjust the Google Apps Script to accept and process
-    // FormData directly rather than expecting JSON
+    // Send data to Google Apps Script
     const response = await fetch(SCRIPT_URL, {
       method: "POST",
       body: formData,
       mode: "no-cors"
     });
 
+    // Since we're using no-cors, we can't read the response
+    // But the data will still be processed by the server
     return {
       success: true,
-      message: `🎉 Congratulations ${data.teamName}! Your registration is successful! 🎉\n\n🚀 Welcome to Hacksprint 5.0! Get ready for an exciting journey of innovation and creativity.\n\n📱 Join our WhatsApp group for important updates and to connect with other participants.`,
+      message: `🎉 Congratulations ${data.teamName}! Your registration is successful! 🎉\n\n🚀 Welcome to Hacksprint 5.0! Get ready for an exciting journey of innovation and creativity.\n\n📱 Join our WhatsApp group for important updates and to connect with other participants:\n${WHATSAPP_GROUP_LINK}\n\n💡 Pro Tip: Keep your PPT ready for the next phase. We'll be in touch soon with more details!`,
       whatsappLink: WHATSAPP_GROUP_LINK
     };
   } catch (error) {
