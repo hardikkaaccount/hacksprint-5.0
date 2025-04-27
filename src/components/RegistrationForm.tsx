@@ -169,8 +169,8 @@ const RegistrationForm = ({ onClose }: { onClose?: () => void }) => {
         'application/pdf'
       ];
       
-      // Check file size (limit to 10MB)
-      const maxSizeInBytes = 10 * 1024 * 1024; // 10MB
+      // Check file size (limit to 3MB to prevent corruption)
+      const maxSizeInBytes = 3 * 1024 * 1024; // 3MB
       
       if (!allowedTypes.includes(file.type) || !file.name.toLowerCase().endsWith('.pdf')) {
         toast({
@@ -183,7 +183,7 @@ const RegistrationForm = ({ onClose }: { onClose?: () => void }) => {
       } else if (file.size > maxSizeInBytes) {
         toast({
           title: "File too large",
-          description: "Please upload a PDF file smaller than 10MB",
+          description: "Please upload a PDF file smaller than 3MB to prevent corruption",
           variant: "destructive",
         });
         setSelectedFile(null);
@@ -554,6 +554,9 @@ const RegistrationForm = ({ onClose }: { onClose?: () => void }) => {
                     {selectedFile ? selectedFile.name : "No file chosen"}
                   </span>
                 </div>
+                <p className="text-xs text-amber-400 mt-1">
+                  Important: PDF files must be smaller than 3MB to prevent corruption
+                </p>
               </div>
               
               {/* Form Status */}
