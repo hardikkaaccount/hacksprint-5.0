@@ -46,7 +46,7 @@ const contributors = [
   { name: "Meera Devi Raval", phone: "+91 8197883645" },
   { name: "Kunal M K", phone: "+91 7795687774" },
   { name: "Shivam Kumar", phone: "+91 7549603525" },
-  { name: "Shubham Jha", phone: "+91 919599031330" },
+  { name: "Shubham Jha", phone: "+91 9599031330" },
 ];
 
 const facultyCoordinators = [
