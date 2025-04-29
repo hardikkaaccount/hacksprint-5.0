@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Award, Gift, Trophy, Briefcase, Rocket, Zap } from 'lucide-react';
+import { Award, Gift, Trophy, Rocket, Zap } from 'lucide-react';
 
 const PrizePool = () => {
   const titleRef = useRef<HTMLHeadingElement>(null);
@@ -90,20 +90,7 @@ const PrizePool = () => {
               <div className="bg-black/30 border border-white/10 rounded-lg p-4 mb-6">
                 <h3 className="text-xl md:text-2xl font-bold text-cyan-400 mb-4">CAREER-DEFINING OPPORTUNITIES</h3>
                 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  {/* Internship Opportunity */}
-                  <div className={`bg-gradient-to-br from-blue-900/50 to-cyan-900/30 border border-blue-500/30 rounded-lg p-4 transform transition-all duration-700 delay-500 ${animated ? 'opacity-100 scale-100' : 'opacity-0 scale-95'}`}>
-                    <div className="flex items-center mb-2">
-                      <div className="p-2 bg-blue-500/50 rounded-full mr-3">
-                        <Briefcase className="h-8 w-8 text-blue-200" />
-                      </div>
-                      <h4 className="text-xl font-bold text-white">Internship Placements</h4>
-                    </div>
-                    <p className="text-blue-200/80 text-left">
-                      Top teams will receive internship offers from our industry partners, giving you real-world experience and professional connections.
-                    </p>
-                  </div>
-                  
+                <div className="grid grid-cols-1 gap-6">
                   {/* Startup Incubation */}
                   <div className={`bg-gradient-to-br from-purple-900/50 to-pink-900/30 border border-purple-500/30 rounded-lg p-4 transform transition-all duration-700 delay-700 ${animated ? 'opacity-100 scale-100' : 'opacity-0 scale-95'}`}>
                     <div className="flex items-center mb-2">

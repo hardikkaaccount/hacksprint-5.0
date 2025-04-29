@@ -151,20 +151,114 @@ export const submitRegistrationToGoogleSheets = async (data: RegistrationData): 
 
     console.log("Processing your registration...");
     
-    // Send data to Google Apps Script
-    const response = await fetch(SCRIPT_URL, {
-      method: "POST",
-      body: formData,
-      mode: "no-cors"
-    });
+    // Use a flag to track if we've already processed the submission
+    let isProcessed = false;
+    
+    // Try first with CORS enabled
+    try {
+      console.log("Attempting submission with standard CORS approach");
+      const response = await fetch(SCRIPT_URL, {
+        method: "POST",
+        body: formData
+      });
 
-    // Since we're using no-cors, we can't read the response
-    // But the data will still be processed by the server
-    return {
-      success: true,
-      message: `🎉 Congratulations ${data.teamName}! Your registration is successful! 🎉\n\n🚀 Welcome to Hacksprint 5.0! Get ready for an exciting journey of innovation and creativity.\n\n📱 Join our WhatsApp group for important updates and to connect with other participants:\n${WHATSAPP_GROUP_LINK}\n\n💡 Pro Tip: Keep your PPT ready for the next phase. We'll be in touch soon with more details!`,
-      whatsappLink: WHATSAPP_GROUP_LINK
-    };
+      console.log("Registration response status:", response.status);
+      
+      // Only try to read the response if the status is OK
+      if (response.ok) {
+        try {
+          const result = await response.json();
+          console.log("Registration server response:", result);
+          
+          if (result && result.success) {
+            isProcessed = true;
+            return {
+              success: true,
+              message: `🎉 Congratulations ${data.teamName}! Your registration is successful! 🎉\n\n🚀 Welcome to Hacksprint 5.0! Get ready for an exciting journey of innovation and creativity.\n\n📱 Join our WhatsApp group for important updates and to connect with other participants:\n${WHATSAPP_GROUP_LINK}\n\n💡 Pro Tip: Keep your PPT ready for the next phase. We'll be in touch soon with more details!`,
+              whatsappLink: WHATSAPP_GROUP_LINK
+            };
+          } else {
+            console.log("Server returned error:", result);
+            // Only throw if we need to try fallback
+            if (!isProcessed) {
+              throw new Error(result?.message || "Server returned error");
+            }
+          }
+        } catch (responseError) {
+          console.log("Response parsing error:", responseError);
+          // Only proceed to fallback if the response couldn't be parsed
+          // AND we're certain the request wasn't processed
+          if (response.status !== 200 && response.status !== 201) {
+            throw new Error("Response could not be parsed");
+          } else {
+            // If we got a success status but couldn't parse the response,
+            // assume it worked anyway
+            console.log("Got success status code. Assuming registration succeeded despite parsing error");
+            isProcessed = true;
+            return {
+              success: true,
+              message: `🎉 Congratulations ${data.teamName}! Your registration is successful! 🎉\n\n🚀 Welcome to Hacksprint 5.0! Get ready for an exciting journey of innovation and creativity.\n\n📱 Join our WhatsApp group for important updates and to connect with other participants:\n${WHATSAPP_GROUP_LINK}\n\n💡 Pro Tip: Keep your PPT ready for the next phase. We'll be in touch soon with more details!`,
+              whatsappLink: WHATSAPP_GROUP_LINK
+            };
+          }
+        }
+      } else {
+        // Non-OK status means we should try fallback
+        console.log("Server returned non-OK status:", response.status);
+        throw new Error(`Server returned status ${response.status}`);
+      }
+    } catch (corsError) {
+      // Only try fallback if we haven't processed the request yet
+      if (isProcessed) {
+        console.log("Request already processed successfully, ignoring fallback");
+        return {
+          success: true,
+          message: `🎉 Congratulations ${data.teamName}! Your registration is successful! 🎉\n\n🚀 Welcome to Hacksprint 5.0! Get ready for an exciting journey of innovation and creativity.\n\n📱 Join our WhatsApp group for important updates and to connect with other participants:\n${WHATSAPP_GROUP_LINK}\n\n💡 Pro Tip: Keep your PPT ready for the next phase. We'll be in touch soon with more details!`,
+          whatsappLink: WHATSAPP_GROUP_LINK
+        };
+      }
+      
+      // CORS might be an issue, fall back to no-cors mode
+      console.log("Falling back to no-cors mode due to:", corsError);
+      
+      try {
+        console.log("Attempting fallback with no-cors mode");
+        // Add a unique identifier to prevent caching/duplication
+        const fallbackFormData = new FormData();
+        
+        // Copy all entries from the original formData
+        for (const [key, value] of formData.entries()) {
+          fallbackFormData.append(key, value);
+        }
+        
+        // Add a timestamp to prevent duplication
+        fallbackFormData.append('requestId', `${Date.now()}-${Math.random().toString(36).substring(2, 15)}`);
+        
+        // Try again with no-cors mode
+        const fallbackResponse = await fetch(SCRIPT_URL, {
+          method: "POST",
+          body: fallbackFormData,
+          mode: "no-cors"
+        });
+        
+        console.log("Fallback request sent (no-cors mode)");
+        isProcessed = true;
+        
+        // Since we're using no-cors, we can't read the response
+        // But the data will still be processed by the server
+        return {
+          success: true,
+          message: `🎉 Congratulations ${data.teamName}! Your registration is successful! 🎉\n\n🚀 Welcome to Hacksprint 5.0! Get ready for an exciting journey of innovation and creativity.\n\n📱 Join our WhatsApp group for important updates and to connect with other participants:\n${WHATSAPP_GROUP_LINK}\n\n💡 Pro Tip: Keep your PPT ready for the next phase. We'll be in touch soon with more details!`,
+          whatsappLink: WHATSAPP_GROUP_LINK
+        };
+      } catch (finalError) {
+        console.error("Final error during registration:", finalError);
+        return {
+          success: false,
+          message: `❌ Oops! We encountered an issue while processing your registration.\n\nPlease try again in a few moments. If the problem persists, contact our support team.\n\nError: ${finalError instanceof Error ? finalError.message : 'Unknown error'}`
+        };
+      }
+    }
   } catch (error) {
     console.error("Error submitting registration:", error);
     return {

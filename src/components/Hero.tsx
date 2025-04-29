@@ -1,5 +1,5 @@
 import React from 'react';
-import { Calendar, MapPin, Briefcase, Rocket } from 'lucide-react';
+import { Calendar, MapPin, Rocket } from 'lucide-react';
 
 interface HeroProps {
   onRegisterClick: () => void;
@@ -30,10 +30,6 @@ const Hero = ({ onRegisterClick }: HeroProps) => {
         
         {/* Opportunity Badges */}
         <div className="flex flex-wrap justify-center gap-3 mb-8">
-          <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-gradient-to-r from-blue-600/40 to-cyan-600/40 backdrop-blur-md rounded-full border border-blue-400/30 shadow-sm">
-            <Briefcase className="w-4 h-4 text-blue-300" />
-            <span className="text-sm font-medium text-white">Internship Opportunities</span>
-          </div>
           <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-gradient-to-r from-purple-600/40 to-pink-600/40 backdrop-blur-md rounded-full border border-purple-400/30 shadow-sm">
             <Rocket className="w-4 h-4 text-purple-300" />
             <span className="text-sm font-medium text-white">Startup Incubation</span>
@@ -52,7 +48,7 @@ const Hero = ({ onRegisterClick }: HeroProps) => {
             </div>
             
             <h2 className="text-xl md:text-3xl font-bold bg-gradient-to-r from-[#8A8FFF] to-[#00E5FF] text-transparent bg-clip-text text-center md:w-1/2 px-4">
-              PES COLLEGE OF ENGINEERING, MANDYA
+              P. E. S. COLLEGE OF ENGINEERING, MANDYA
             </h2>
             
             <div className="flex items-center justify-start md:w-1/4 md:pl-4">
@@ -74,7 +70,7 @@ const Hero = ({ onRegisterClick }: HeroProps) => {
                 rel="noopener noreferrer" 
                 className="text-lg hover:underline hover:decoration-transparent hover:bg-clip-text hover:text-transparent hover:bg-gradient-to-r hover:from-[#B66EFF] hover:to-[#00E5FF]"
               >
-                Dr. H. D. Chowdaiah Auditorium, K. V. Shankaragowda Rd,<br />PES College Campus, Mandya, Karnataka 571401
+                Dr. H. D. Chowdaiah Auditorium, K. V. Shankaragowda Rd,<br />P. E. S. College Campus, Mandya, Karnataka 571401
               </a>
             </div>
             <div className="flex items-center space-x-2 text-white/80">

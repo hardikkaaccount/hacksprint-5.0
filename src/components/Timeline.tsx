@@ -4,7 +4,7 @@ const timelineEvents = [
   {
     emoji: '🟢',
     title: 'Registration Starts',
-    date: '23 April',
+    date: '26 April',
     description: 'Registration opens for all participants'
   },
   {

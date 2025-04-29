@@ -61,7 +61,7 @@ const Index = () => {
         <Header />
         <main>
           <section aria-labelledby="hero-heading">
-            <h1 id="hero-heading" className="sr-only">HackSprint 5.0 - A National Level Hackathon by PES College of Engineering</h1>
+            <h1 id="hero-heading" className="sr-only">HackSprint 5.0 - A National Level Hackathon by P. E. S. College of Engineering</h1>
             <Hero onRegisterClick={handleRegisterClick} />
           </section>
           <section id="prizes" aria-labelledby="prize-heading">
