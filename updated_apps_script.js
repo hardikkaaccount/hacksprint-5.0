@@ -89,23 +89,41 @@ function doPost(e) {
     // DUPLICATE CHECK TO PREVENT MULTIPLE REGISTRATIONS
     // =================================================
     
-    // 1. Check for duplicate team name
-    const teamName = formData.teamName.trim();
+    // Get all current data to check for duplicates
     const dataRange = sheet.getDataRange();
     const values = dataRange.getValues();
+    const lastColumn = values[0].length - 1; // Get the index of the last column (for requestId)
     
-    // Start from row 1 (row 0 is the header)
-    for (let i = 1; i < values.length; i++) {
-      // Column 1 is Team Name (0-based)
-      if (values[i][1] === teamName) {
-        Logger.log("Duplicate team name found: " + teamName);
-        return createSuccessResponse("Team already registered successfully.");
+    // Check if we have a valid requestId for duplicate detection
+    if (requestId) {
+      // First check: Does this specific request ID already exist in our sheet?
+      for (let i = 1; i < values.length; i++) {
+        if (values[i][lastColumn] === requestId) {
+          Logger.log("DUPLICATE DETECTED: Request ID " + requestId + " already exists");
+          return createSuccessResponse("Your registration was already processed successfully.");
+        }
       }
-      
-      // If we have a requestId, check for duplicate requestId
-      if (requestId && values[i][15] === requestId) {
-        Logger.log("Duplicate request ID found: " + requestId);
-        return createSuccessResponse("Registration already processed.");
+    }
+    
+    // Second check: Is this team name already registered?
+    const teamName = formData.teamName.trim();
+    for (let i = 1; i < values.length; i++) {
+      if (values[i][1].trim().toLowerCase() === teamName.toLowerCase()) {
+        Logger.log("DUPLICATE DETECTED: Team name " + teamName + " already exists");
+        return createSuccessResponse("This team is already registered for HackSprint 5.0.");
+      }
+    }
+    
+    // Third check: Validate the lead's phone and email
+    const leadPhone = formData.leadPhone?.trim();
+    const leadName = formData.leadName?.trim();
+    
+    if (leadPhone) {
+      for (let i = 1; i < values.length; i++) {
+        if (values[i][3]?.trim() === leadPhone) {
+          Logger.log("DUPLICATE DETECTED: Phone number " + leadPhone + " already used for registration");
+          return createSuccessResponse("This phone number is already used for a team registration.");
+        }
       }
     }
     
@@ -130,22 +148,31 @@ function doPost(e) {
     // Process the file data if we found it
     if (fileData && fileData.content) {
       try {
-        Logger.log("Processing file: " + (fileData.name || "unnamed file"));
-        
-        // Decode the base64 content
-        const fileBlob = Utilities.newBlob(
-          Utilities.base64Decode(fileData.content),
-          fileData.type || 'application/pdf',
-          fileData.name || formData.submissionFileName || "submission.pdf"
-        );
-        
-        // Get the specific folder by ID
+        // First check if we already have a file with this team name in the folder
+        // to avoid duplicate uploads
         const folder = DriveApp.getFolderById(formData.folderId || "12hOP_HtiWFeISUUIdb2iJeW33QiDDd-r");
+        const existingFiles = folder.getFilesByName(fileData.name);
         
-        // Upload file to Drive
-        const file = folder.createFile(fileBlob);
-        pptUrl = file.getUrl();
-        Logger.log("File uploaded successfully: " + pptUrl);
+        // If we already have a file with this name, use its URL instead of uploading again
+        if (existingFiles.hasNext()) {
+          const existingFile = existingFiles.next();
+          pptUrl = existingFile.getUrl();
+          Logger.log("Using existing file: " + pptUrl);
+        } else {
+          Logger.log("Processing file: " + (fileData.name || "unnamed file"));
+          
+          // Decode the base64 content
+          const fileBlob = Utilities.newBlob(
+            Utilities.base64Decode(fileData.content),
+            fileData.type || 'application/pdf',
+            fileData.name || formData.submissionFileName || "submission.pdf"
+          );
+          
+          // Upload file to Drive
+          const file = folder.createFile(fileBlob);
+          pptUrl = file.getUrl();
+          Logger.log("File uploaded successfully: " + pptUrl);
+        }
       } catch (error) {
         Logger.log("File upload error: " + error.toString());
         return createErrorResponse("Error uploading file: " + error.toString());

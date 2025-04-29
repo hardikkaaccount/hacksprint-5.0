@@ -73,6 +73,9 @@ export const submitRegistrationToGoogleSheets = async (data: RegistrationData): 
     // Create FormData with optimized data structure
     const formData = new FormData();
     
+    // Generate a unique request ID that will be consistent for this registration
+    const requestId = `${Date.now()}-${Math.random().toString(36).substring(2, 10)}`;
+    
     // Structure the data exactly as needed by the Google Sheet
     const registrationData = {
       timestamp: new Date().toISOString(),
@@ -92,11 +95,14 @@ export const submitRegistrationToGoogleSheets = async (data: RegistrationData): 
       sheetId: SHEET_ID,
       folderId: DRIVE_FOLDER_ID,
       originalFileName: data.pptFile ? data.pptFile.name : '',
-      submissionFileName: data.pptFile ? `${data.teamName.replace(/[^\w]/g, '_')}_${Date.now()}.pdf` : ''
+      submissionFileName: data.pptFile ? `${data.teamName.replace(/[^\w]/g, '_')}_${Date.now()}.pdf` : '',
+      requestId: requestId  // Add the request ID to the registration data
     };
 
     // Add the registration data as a single JSON string
     formData.append('registrationData', JSON.stringify(registrationData));
+    // Also add the request ID directly to the form data for easier access
+    formData.append('requestId', requestId);
     
     // Handle file upload
     if (data.pptFile) {
@@ -223,21 +229,14 @@ export const submitRegistrationToGoogleSheets = async (data: RegistrationData): 
       
       try {
         console.log("Attempting fallback with no-cors mode");
-        // Add a unique identifier to prevent caching/duplication
-        const fallbackFormData = new FormData();
         
-        // Copy all entries from the original formData
-        for (const [key, value] of formData.entries()) {
-          fallbackFormData.append(key, value);
-        }
-        
-        // Add a timestamp to prevent duplication
-        fallbackFormData.append('requestId', `${Date.now()}-${Math.random().toString(36).substring(2, 15)}`);
+        // Use the same formData that has our consistent requestId
+        // Don't create a new FormData object which causes duplication
         
         // Try again with no-cors mode
         const fallbackResponse = await fetch(SCRIPT_URL, {
           method: "POST",
-          body: fallbackFormData,
+          body: formData,
           mode: "no-cors"
         });
         
