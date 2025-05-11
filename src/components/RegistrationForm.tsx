@@ -291,302 +291,35 @@ const RegistrationForm = ({ onClose }: { onClose?: () => void }) => {
         <div className="relative bg-black/60 backdrop-blur-md rounded-xl p-4 md:p-6 border border-white/10 max-h-[90vh] overflow-y-auto w-full">
           <DialogTitle className="sr-only">Registration Form</DialogTitle>
           
-          <h2 className="text-2xl md:text-4xl font-bold text-center mb-6 bg-clip-text text-transparent bg-gradient-to-r from-white to-gray-400">
-            Register Your Team
-          </h2>
-          
-          <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 md:space-y-6">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                {/* Team Name */}
-                <FormField
-                  control={form.control}
-                  name="teamName"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Team Name</FormLabel>
-                      <FormControl>
-                        <Input placeholder="Enter your team name" {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                
-                {/* Lead Name */}
-                <FormField
-                  control={form.control}
-                  name="leadName"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Team Lead's Email</FormLabel>
-                      <FormControl>
-                        <Input placeholder="Enter team lead's email id" type="email" {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-              </div>
-              
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                {/* Lead Phone */}
-                <FormField
-                  control={form.control}
-                  name="leadPhone"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Phone Number</FormLabel>
-                      <FormControl>
-                        <Input 
-                          placeholder="Enter contact number" 
-                          type="tel" 
-                          {...field} 
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                
-                {/* College Name */}
-                <FormField
-                  control={form.control}
-                  name="collegeName"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>College Name</FormLabel>
-                      <FormControl>
-                        <Input placeholder="Enter your college name" {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-              </div>
-              
-              {/* Hackathon Domain */}
-              <FormField
-                control={form.control}
-                name="hackathonDomain"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Project Domain</FormLabel>
-                    <Select onValueChange={field.onChange} defaultValue={field.value}>
-                      <FormControl>
-                        <SelectTrigger>
-                          <SelectValue placeholder="Select project domain" />
-                        </SelectTrigger>
-                      </FormControl>
-                      <SelectContent>
-                        <SelectItem value="Software Development">Software Development</SelectItem>
-                        <SelectItem value="Hardware Development">Hardware Development</SelectItem>
-                      </SelectContent>
-                    </Select>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              
-              {/* Team Members */}
-              <div className="space-y-3">
-                <h3 className="font-medium">Team Members</h3>
-                
-                {/* Member 1 */}
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <FormField
-                    control={form.control}
-                    name="member1Name"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Member 1 Name</FormLabel>
-                        <FormControl>
-                          <Input placeholder="Enter member name" {...field} />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                  <FormField
-                    control={form.control}
-                    name="member1USN"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Member 1 USN</FormLabel>
-                        <FormControl>
-                          <Input placeholder="Enter USN" {...field} />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                </div>
-                
-                {/* Member 2 */}
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <FormField
-                    control={form.control}
-                    name="member2Name"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Member 2 Name</FormLabel>
-                        <FormControl>
-                          <Input placeholder="Enter member name" {...field} />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                  <FormField
-                    control={form.control}
-                    name="member2USN"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Member 2 USN</FormLabel>
-                        <FormControl>
-                          <Input placeholder="Enter USN" {...field} />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                </div>
-                
-                {/* Member 3 */}
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <FormField
-                    control={form.control}
-                    name="member3Name"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Member 3 Name (Optional)</FormLabel>
-                        <FormControl>
-                          <Input placeholder="Enter member name" {...field} />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                  <FormField
-                    control={form.control}
-                    name="member3USN"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Member 3 USN (Optional)</FormLabel>
-                        <FormControl>
-                          <Input placeholder="Enter USN" {...field} />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                </div>
-                
-                {/* Member 4 */}
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <FormField
-                    control={form.control}
-                    name="member4Name"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Member 4 Name (Optional)</FormLabel>
-                        <FormControl>
-                          <Input placeholder="Enter member name" {...field} />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                  <FormField
-                    control={form.control}
-                    name="member4USN"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Member 4 USN (Optional)</FormLabel>
-                        <FormControl>
-                          <Input placeholder="Enter USN" {...field} />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                </div>
-              </div>
-              
-              {/* PDF Upload Field */}
-              <div className="space-y-2">
-                <div className="flex items-center justify-between">
-                  <FormLabel htmlFor="pptFile">📎 PDF Project Proposal</FormLabel>
-                  <a 
-                    href="https://drive.google.com/drive/folders/1NHNXRBMk1gtzMSTHOYmDaUomQzZQfLop?usp=sharing" 
-                    target="_blank" 
-                    rel="noopener noreferrer"
-                    className="text-xs text-blue-400 hover:text-blue-300 underline flex items-center"
-                  >
-                    <Download className="mr-1 h-3 w-3" />
-                    Download template
-                  </a>
-                </div>
-                <div className="flex items-center gap-4">
-                  <Button 
-                    type="button"
-                    variant="outline"
-                    className="border-dashed border-2 border-white/20 hover:border-white/30"
-                    onClick={() => fileInputRef.current?.click()}
-                  >
-                    <Upload className="mr-2 h-4 w-4" />
-                    Choose PDF File
-                  </Button>
-                  
-                  <input
-                    ref={fileInputRef}
-                    id="pptFile"
-                    type="file"
-                    accept=".pdf,application/pdf"
-                    onChange={handleFileChange}
-                    className="hidden"
-                  />
-                  
-                  <span className="text-sm text-muted-foreground truncate max-w-[200px] md:max-w-xs">
-                    {selectedFile ? selectedFile.name : "No file chosen"}
-                  </span>
-                </div>
-                
-                <div className="bg-blue-950/30 border border-blue-400/20 rounded-md p-2 mt-2">
-                  <p className="text-xs text-blue-300 font-medium">
-                    <strong>PDF Requirements:</strong>
-                  </p>
-                  <ul className="text-xs text-blue-300/90 list-disc list-inside mt-1 space-y-1">
-                    <li>Upload your project proposal as a PDF file (.pdf extension)</li>
-                    <li>Ensure your PDF opens correctly before uploading</li>
-                    <li>For large files, please be patient during upload</li>
-                  </ul>
-                </div>
-              </div>
-              
-              {/* Form Status */}
-              <RegistrationFormStatus status={formStatus} message={statusMessage} />
-              
-              {/* Registration Fee Note */}
-              <div className="text-amber-400 text-sm p-3 border border-amber-400/30 rounded-md bg-amber-400/10">
-                <p className="font-medium">Note: A registration fee of ₹250 per member of the team will be collected if the idea gets selected. Wishing you all the best! The results will be announced in the WhatsApp group. You will find the group link after submission — do join!</p>
-              </div>
-              
-              {/* Submit Button */}
-              <Button 
-                type="submit" 
-                className="w-full bg-gradient-to-r from-primary to-secondary hover:from-primary/90 hover:to-secondary/90 transition-all duration-300 transform hover:scale-[1.02] mt-4"
-                disabled={formStatus === 'submitting'}
+          <div className="text-center space-y-4">
+            <h2 className="text-2xl md:text-4xl font-bold text-red-500">
+              Registration Closed
+            </h2>
+            <p className="text-white/80 text-lg">
+              Thank you for your interest in HackSprint 5.0. Registration period has ended.
+            </p>
+            <div className="mt-6 space-y-4">
+              <p className="text-white/90 text-lg">Don't miss out on future opportunities! Join our vibrant community of innovators and tech enthusiasts.</p>
+              <p className="text-white/80 text-sm">Get exclusive updates about upcoming hackathons, workshops, and tech events at PESCE!</p>
+              <a 
+                href="https://chat.whatsapp.com/G1uQtzYAYQg003BeBNq2qD"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center px-8 py-3 bg-green-600 hover:bg-green-700 text-white rounded-full transition-colors transform hover:scale-105 duration-300 font-semibold shadow-lg hover:shadow-green-500/20"
               >
-                {formStatus === 'submitting' ? (
-                  <Rocket className="mr-2 h-4 w-4 animate-bounce" />
-                ) : (
-                  <Rocket className="mr-2 h-4 w-4" />
-                )}
-                Submit Registration
-              </Button>
-            </form>
-          </Form>
+                <svg className="w-6 h-6 mr-2" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+                </svg>
+                Join Our Tech Community
+              </a>
+            </div>
+            <Button 
+              onClick={onClose}
+              className="mt-4 bg-gray-700 hover:bg-gray-600 text-white"
+            >
+              Close
+            </Button>
+          </div>
         </div>
       )}
       

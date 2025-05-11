@@ -12,9 +12,9 @@ const navigation = [
 
 // News items with emojis
 const newsItems = [
-  { emoji: '🔔', text: 'ALERT: Registration has opened - closes on 10th May 2025!', href: 'hero', isInternal: true },
-  { emoji: '📢', text: 'ANNOUNCEMENT: Problem statements are out!!', href: "https://drive.google.com/drive/folders/16YYXYgJk1_GMYizsdVapQzZe7Z4jy4mw?usp=sharing", isInternal: false },
-  { emoji: '📝', text: 'Download PPT template for submissions', href: "https://drive.google.com/drive/folders/16YYXYgJk1_GMYizsdVapQzZe7Z4jy4mw?usp=sharing", isInternal: false }
+  { emoji: '🔒', text: 'Registrations are now closed!', href: 'hero', isInternal: true },
+  { emoji: '🔒', text: 'Registrations are now closed!', href: 'hero', isInternal: true },
+  { emoji: '🔒', text: 'Registrations are now closed!', href: 'hero', isInternal: true },
 ];
 
 const Header = () => {
